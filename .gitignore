@@ -1,0 +1,7 @@
+# PyCharm
+# http://www.jetbrains.com/pycharm/webhelp/project.html
+/.idea/
+web.config
+/node_modules/
+/rev/
+
