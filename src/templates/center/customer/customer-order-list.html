@@ -1,0 +1,52 @@
+
+<div >
+  <h4 class="inline-block mr50" >订单信息</h4>
+  <div class="form-inline form-group inline-block"  >
+    <i class=" c-999">筛选：</i>
+    <select class="form-control input-sm " ng-init="orderTypeContent=[{id:-1,value:'全部'},{id:1,value:'设计订单'},{id:2,value:'装修订单'},{id:3,value:'配饰订单'}]" ng-options="v.id as v.value for v in orderTypeContent" ng-model="list.contentType"   >
+      <option value="">--订单内容--</option>
+    </select>
+
+
+    <select class="form-control input-sm "   ng-options="v.code as v.desc for v in allStatusTypes.orderStatusTypes" ng-model="list.orderStatus"   >
+      <option value="">--订单状态--</option>
+    </select>
+
+  </div>
+  <table class=" table   table-hover  table-bordered table-striped text-center ">
+    <thead >
+    <tr>
+      <td>订单编号</td>
+      <!--<td>订单类型</td>-->
+      <td>订单内容</td>
+      <td>作品编号</td>
+      <td>订单阶段</td>
+      <td>待付金额</td>
+      <td>订单状态</td>
+      <td>下单时间</td>
+      <td>操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result">
+      <td ng-bind="g.orderNum "></td>
+      <!--<td ng-bind="orderTypekw[g.orderType] " ng-init="orderTypekw={1:'预约订单',2:'合同订单'}" ></td>-->
+      <!--<td ng-bind="orderTypeContent[g.contentType]" ng-init="orderTypeContent={1:'设计订单',2:'装修订单',3:'配饰订单'}" ></td>-->
+      <td ng-bind="g.contentTypeDesc" ></td>
+      <td ng-bind="g.caseNum"></td>
+      <!--<td ng-init="orderStepStatus={1:'待付款',2:'付款中',3:'已付款',4:'已退款',5:'已迁移'}"><i ng-init="orderStep={1:'预约订单'}">{{orderStep[g.currentPhase]}}</i><i class="f12 c-999">({{orderStepStatus[g.currentPhaseStatus]}})</i></td>-->
+      <td><i>{{g.currentPhaseDesc}}</i><i class="f12 c-999" ng-show="g.currentPhaseStatusDesc">({{g.currentPhaseStatusDesc}})</i></td>
+      <td ng-bind="g.unpaidAmount "></td>
+      <!--<td ng-bind="orderStatuskw[g.status]" ng-init="orderStatuskw={1:'待完善',2:'待确认',3:'进行中',4:'已完成',5:'已终止'}"></td>-->
+      <td ng-bind="g.statusDesc"></td>
+      <td ng-bind="g.createTime | date:'yyyy-MM-dd HH:mm:ss'  "></td>
+
+      <td>
+        <button  class="btn btn-success btn-xs "  ng-click=show(g.id,g.orderType)>查看</button>
+      </td>
+    </tr>
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="8" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>

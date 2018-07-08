@@ -1,0 +1,77 @@
+
+<div class="crumbs" >
+  <h3>订单列表</h3>
+  <p><a ui-sref="main.order-list" >订单管理</a> > 订单列表</p>
+</div>
+
+<div class="content-box" >
+  <div class="form-inline form-group searchs "  >
+    <select class="form-control input-sm " ng-init="orderTypeContent=[{id:-1,value:'全部'},{id:1,value:'设计订单'},{id:2,value:'装修订单'},{id:3,value:'配饰订单'}]" ng-options="v.id as v.value for v in orderTypeContent" ng-model="list.contentType"   >
+      <option value="">--订单内容--</option>
+    </select>
+    <select class="form-control input-sm "   ng-options="v.code as v.desc for v in allStatusTypes.orderStatusTypes" ng-model="list.orderStatus"   >
+      <option value="">--订单状态--</option>
+    </select>
+    <div class="inline-block f12 float-right"><span style="width:120px;">下单时间：</span>
+      <div class="input-append date form_datetime_start inline-block" >
+        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+        <input class=" form-control input-sm" size="16" placeholder="起始时间" type="text" onkeyup="this.value=''" id="beginTime" >
+      </div> ----
+      <div class="input-append date form_datetime_end inline-block" >
+        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+        <input class=" form-control input-sm" size="16" type="text"  placeholder="结束时间" onkeyup="this.value=''" id="endTime">
+      </div>
+      <input type="hidden" ng-class="{err:!dateThan==''}">
+      <i class="f12 c-red" >{{dateThan}}</i>
+      <input type="text" class="form-control input-sm"  placeholder="订单编号/手机号" maxlength="30" size="30" ng-model="list.searchKey">
+      <button   type="button" class="btn btn-primary btn-sm  input-sm " ng-click="submitSearch(list)">  <i class="iconfont f12 no-b ">&#xe644;</i>查询</button>
+      <button   type="button" class="btn btn-primary btn-sm  input-sm ml20 "  ui-sref="main.order-list-create"> 创建合同订单</button>
+
+    </div>
+  </div>
+
+
+  <table class=" table   table-hover table-bordered  table-striped text-center ">
+    <thead >
+    <tr>
+      <td>订单编号</td>
+      <!--<td>订单类型</td>-->
+      <td>订单内容</td>
+      <td>下单客户</td>
+      <td>当前阶段</td>
+      <td>待付金额</td>
+      <td>订单状态</td>
+      <td>下单时间</td>
+      <td>操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result">
+      <td ng-bind="g.orderInfo.orderNum "></td>
+      <!--<td ng-bind="orderTypekw[g.orderInfo.orderType] " ng-init="orderTypekw={1:'预约订单',2:'合同订单'}" ></td>-->
+      <!--<td ng-bind="orderTypeContent[g.orderInfo.contentType]" ng-init="orderTypeContent={1:'设计订单',2:'装修订单',3:'配饰订单'}" ></td>-->
+      <td ng-bind="g.orderInfo.contentTypeDesc" ></td>
+      <td>{{g.customer.nickName }}</td>
+      <!--<td ng-init="orderStepStatus={1:'待付款',2:'付款中',3:'已付款',4:'已退款',5:'已迁移'}" ><i ng-init="orderStep={1:'预约订单',2:'达成协议'}">{{orderStep[g.orderInfo.currentPhase]}}</i><i class="f12 c-999">({{orderStepStatus[g.orderInfo.currentPhaseStatus]}})</i></td>-->
+      <td><i>{{g.orderInfo.currentPhaseDesc}}</i><i class="f12 c-999" ng-show="g.orderInfo.currentPhaseStatusDesc">({{g.orderInfo.currentPhaseStatusDesc}})</i></td>
+      <td ng-bind="g.orderInfo.unpaidAmount "></td>
+      <!--<td ng-bind="orderStatus[g.orderInfo.status]" ng-init="orderStatus={1:'待完善',2:'待确认',3:'进行中',4:'已完成',5:'已终止'}"></td>-->
+      <td ng-bind="g.orderInfo.statusDesc" ng-class="{'text-yellow':g.orderInfo.status==1}"></td>
+      <td ng-bind="g.orderInfo.createTime | date:'yyyy-MM-dd HH:mm:ss'  "></td>
+      <td>
+        <button  class="btn btn-success btn-xs "  ng-click=show(g.orderInfo.id,g.orderInfo.orderType)>查看</button>
+
+        <a  class="btn btn-warning btn-xs " ng-if="g.orderInfo.status==1"  ng-href="#/main/order-list-info/order-step-info?id={{g.orderInfo.id}}&type=2&otype={{g.orderInfo.orderType}}" >完善</a>
+        <a  class="btn btn-primary btn-xs " ng-if="g.orderInfo.status==2||g.orderInfo.status==3" ng-href="#/main/order-list-info/order-step-info?id={{g.orderInfo.id}}&type=2&otype={{g.orderInfo.orderType}}" >修改</a>
+      </td>
+    </tr>
+
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="8" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>
+
+
+
+

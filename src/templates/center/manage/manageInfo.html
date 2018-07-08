@@ -1,0 +1,328 @@
+<style>
+  .text dd{ padding: 6px 0}
+  .form-inline select { width: 26% !important; min-width:120px;  margin-bottom: 10px }
+  .form-inline select option{ width: auto}
+  .form-inline span{width: 140px}
+</style>
+<div class="crumbs">
+  <h3>公司信息</h3>
+  <p><a ui-sref="main.manageInfo" >账户管理</a> >公司信息</p>
+</div>
+
+<div class="content-box float-left" style="width: 64%; padding:auto 0px; ">
+  <p class=" model-title mt50 block  ">基本信息</p>
+  <div class="form-inline form-group">
+    <dl>
+      <dd><span>公司全称：</span><em class="f16 c-999">{{businessInfo.name}}</em></dd>
+
+      <dd><span class="pa">注册地址：</span>
+        <div style="margin-left: 140px;">
+          <select class="form-control " ng-options="v.id as v.name for v in provinces" ng-model="businessInfo.provinceId"   ng-required="true" ng-blur="provinceId =!businessInfo.provinceId"  ng-class="{err:provinceId }" >
+            <option value="">--省--</option>
+          </select>
+
+          <select class="form-control " ng-options="v.id as v.name for v in cities" ng-model="businessInfo.cityId"  ng-required="true" ng-blur="cityId =!businessInfo.cityId"  ng-class="{err:cityId }"  >
+            <option value="">--市--</option>
+          </select>
+          <select class="form-control areas " ng-options="v.id as v.name for v in areas" ng-model="businessInfo.areaId" ng-if="isAreaShow"  ng-required="true" ng-blur="areaId =!businessInfo.areaId"  ng-class="{err:areaId }" >
+            <option value="">--区/县--</option>
+          </select>
+          <input type="text"   class="form-control" style="width:80%;  max-width: 570px" ng-model="businessInfo.address" ng-required="true" ng-blur="address =!businessInfo.address"  ng-class="{err:address }"  maxlength="30"  placeholder="详细地址30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber" />
+        </div>
+      </dd>
+
+
+      <dd><span>公司LOGO：</span><div class="upimg-inline-block ">
+        <ul>
+          <li ><button type="button"  class="btn btn-info " id="logoImage"> 上传公司LOGO <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="businessInfo.logoImage " /></li>
+        </ul>
+      </div>
+        <!---->
+      </dd>
+      <!--<dd><span>主营业务</span>：-->
+        <!--<label class="ml20" ng-repeat="k in allStatusTypes.decorateTypes"><input type="checkbox"  name="decorateTypes" ng-model="businessInfo.decorateTypes[k.code]" >{{k.desc}}</label>-->
+        <!--<input type="hidden" ng-class="{err:ischoose}">-->
+        <!--<i ng-if="ischoose" class="f12 c-red ml10">主营业务不能为空！</i>-->
+      <!--</dd>-->
+
+      <dd class="clear"><span class="pa">公司简介：</span>
+        <div style="margin-left: 140px"><textarea class="form-control" ng-model="businessInfo.description"  style="width:80%; "    rows="5" ng-required="true" ng-blur="description =!businessInfo.description"  ng-class="{err:description }" ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea><br><i class="c-999">{{businessInfo.description | monitorWords}}/500</i></div>
+      </dd>
+
+      <p class=" model-title mt50 block  ">公司展示</p>
+
+      <dd>
+        <!---->
+        <div>
+          <ul>
+            <li class="inline-block v-top"><span>公司720：</span></li>
+            <li class="inline-block">
+              <button type="button" class="btn btn-info " ng-init="initDialogDataLength={maxLen:1,minLen:0}"   ng-click="create720Dialog({lastData:get720datas,addData:{},maxLen:initDialogDataLength.maxLen,isScene:true})"  > 添加公司720</button>
+              <i class="f12 c-999 ml10">(选填，请上传720压缩包)</i>
+              <input class="form-control create720DialogCheck " type="hidden" ng-blur="create720DialogCheck=get720datas.length<initDialogDataLength.minLen"  ng-class="{err:create720DialogCheck }"/>
+              <i class="f12 c-red lh240  block"  ng-if="create720DialogCheck">至少上传一组720包！</i>
+            </li>
+          </ul>
+          <span ng-if="get720datas.length"></span>
+          <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="get720datas.length">
+            <li  ng-model="get720datas" ng-repeat="g in get720datas track by $index" class="f12 lh260" >
+
+              <a class="cursor" style="width:70%;" class="inline-block" data-target='.myModal720' ng-click="create720Show(view720(g.pathOf720)[0])"  data-toggle='modal'  ><img ng-src="{{view720(g.pathOf720)[1]}}"  width="30" height="30" alt="缩略图" /></a>
+
+              <span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="create720Dialog({lastData:get720datas,addData:g,index:$index,isScene:true})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="create720Del([get720datas,g])">移除</a></span>
+
+            </li>
+          </ul>
+
+        </div>
+        <!---->
+      </dd>
+
+      <dd>
+        <!---->
+        <div>
+          <ul>
+            <li class="inline-block"><span >上传视频：</span></li>
+            <li class="inline-block">
+              <button type="button" class="btn btn-info " ng-init="initCreateV={maxLen:1}"   ng-click="createVideoDialog( {lastData:getCompanyVideos,addData:{},maxLen:initCreateV.maxLen})"  > 添加公司视频</button><i class="f12 c-999 ml10">(选填，展示公司形象的视频，1个视频)</i>
+            </li>
+          </ul>
+          <span ng-if="getCompanyVideos.length"></span>
+          <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="getCompanyVideos.length">
+            <li  ng-model="getCompanyVideos" ng-repeat="g in getCompanyVideos track by $index" class="f12 lh260" >
+              <i class="iconfont"></i>
+              <a class="cursor"   data-target='.myModalVideo' ng-click="createVideoShow(g.url)"  data-toggle='modal' title="{{g.name}}">
+                <img ng-src="{{g.url}}?vframe/jpg/offset/{{g.second}}/w/50/h/30" alt="缩略图"><em class="ml10">{{g.name}}</em> <i class="c-999"> 时长：{{g.duration | number:2}} s</i>
+              </a>
+              <span class="float-right c-999">
+                <i class="iconfont f12">&#xe616;</i>
+                <a href="javascript:void(0)"  data-target='.upVideoDialog'   data-toggle='modal' ng-click="createVideoDialog( {lastData:getCompanyVideos,addData:g,index:$index})" >编辑</a>
+                <i class="iconfont f12">&#xe615;</i>
+                <a  href="javascript:void(0)" ng-click="createVideoDel([getCompanyVideos,g])">移除</a>
+              </span>
+            </li>
+          </ul>
+
+        </div>
+        <!---->
+      </dd>
+      <dd>
+        <!---->
+        <div>
+          <ul>
+            <li class="inline-block"><span >公司实景：</span></li>
+            <li class="inline-block">
+              <button type="button" class="btn btn-info " ng-init="initCreatePhoto={maxLen:15,minLen:1}"   ng-click="createPhotoDialog({lastData:getCompanyPhotos,addData:{},maxLen:initCreatePhoto.maxLen})"  > 添加公司实景</button><i class="f12 c-999 ml10">(展示公司形象的实景照片，1～15组照片)</i></li>
+            <input class="form-control" type="hidden" ng-blur="creatPicslen=getCompanyPhotos.length<initCreatePhoto.minLen"  ng-class="{err:creatPicslen }"/>
+            <i class="f12 c-red text-center"  ng-if="creatPicslen">至少上传一组公司实景！</i>
+          </ul>
+          <span ng-if="getCompanyPhotos.length"></span>
+          <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="getCompanyPhotos.length">
+            <li  ng-model="getCompanyPhotos" ng-repeat="g in getCompanyPhotos track by $index" class="f12 lh260" >
+              <a class="cursor" style="width:70%;" class="inline-block" data-target='.myModal' ng-click="createPhotoShow(g.url)"  data-toggle='modal' title="{{g.name}}"><img ng-src="{{g.url}}&imageView2/1/w/30/h/30" alt="缩略图" /><em class="ml10">{{g.name}}</em></a>
+              <span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createPhotoDialog({lastData:getCompanyPhotos,addData:g,index:$index})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createPhotoDel([getCompanyPhotos,g])">移除</a></span>
+            </li>
+          </ul>
+        </div>
+        <!---->
+      </dd>
+      <dd  class="mt30" >
+        <span></span>
+        <button  ng-click="submit([businessInfo,true])"  ng-disabled="ispostIng" type="button" class="btn btn-primary ">修改</button>
+      </dd>
+    </dl>
+
+  </div>
+</div>
+
+
+<!--实名认证-->
+<div class="content-box float-right " style="width: 34%">
+  <p class=" model-title mt50 block  ">实名认证</p>
+  <div class="form-inline form-group text">
+    <dl style="color: #00a551; padding-left: 20px" >
+      <dd class="inline-block" style="width: 250px"><span>营业执照副本认证：</span> 是</dd>
+    </dl>
+  </div>
+
+</div>
+
+<!--管理员账户管理-->
+<div class="content-box float-right mt30 " style="width: 34%">
+  <p class=" model-title mt50 block  ">管理员账户管理</p>
+  <div class="form-inline form-group text">
+    <dl style="color: #00a551" >
+      <dd><span>姓名：</span>  {{getUserInfo.ownerName}} </dd>
+      <dd><span>帐号：</span> {{getUserInfo.userName}}</dd>
+      <dd><span>密码：</span> ******</dd>
+      <dd><span>手机号：</span>{{getUserInfo.ownerPhone }}</dd>
+      <dd ng-if="getUserInfo.hasEmployeeIdentity"><span>业者类型：</span>{{getUserInfo.employeeTypeStr }}</dd>
+      <dd  class="mt20" >
+        <span></span>
+        <button   data-target='.myModalpas'   data-toggle='modal' ng-click="clearDialog()"  type="button" class="btn btn-primary ">修改密码</button>
+        <button   ng-if="!getUserInfo.hasEmployeeIdentity" ng-click="editEroot('open')"  type="button" class="btn btn-success ">开通业者</button>
+      </dd>
+
+    </dl>
+  </div>
+</div>
+
+<!--dialog修改密码-->
+<div class="modal fade myModalpas" >
+  <div class="modal-dialog " style="width: 400px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">修改密码</h4>
+      </div>
+      <div class="modal-body">
+        <div class="dialog-content ">
+          <dl class="  form-inline form-group text-center " ng-if="!setpowbox">
+            <dd>原密码：<input  class="form-control" size="30"    type="password" placeholder="请输入8-20位原始密码" ng-model="setpow.oldPassword" ng-pattern="pubRegex.password"  maxlength="20" minlength="8"   autocomplete="off"></dd>
+            <dd>新密码：<input  class="form-control" size="30"    type="password" placeholder="密码由8-20位数字和字母构成" ng-model="setpow.password" ng-pattern="pubRegex.password"  maxlength="20" minlength="8"   autocomplete="off"></dd>
+            <dd style="margin-left: -10px">重复密码：<input class="form-control"  size="30"  type="password" placeholder="重复密码" ng-model="setpow.password2"  maxlength="20" minlength="8"  autocomplete="off"></dd>
+          </dl>
+          <p class="text-center c-red f12 "><em ng-bind="errorMsg" ></em></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{setpowBtntext}}</button>
+        <button type="button" class="btn btn-danger" ng-if="!setpowbox"  ng-click="dialogSubmitUser(setpow)" >提交</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!--dialog上传图文模块-->
+<div class="modal fade upPhotoDialog  create-dialog-box">
+  <div class="modal-dialog " style="width: 700px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" ng-if="createPhotoTitleAdd">添加图片</h4>
+        <h4 class="modal-title" ng-if="!createPhotoTitleAdd">编辑图片</h4>
+      </div>
+      <div class="modal-body" ng-show="maxlengtherr">
+        <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+      </div>
+      <div class="modal-body"  ng-show="!maxlengtherr" >
+        <div class="dialog-content ml20 ">
+          <dl class="  form-inline form-group" >
+            <dd><span>图片名称：</span><input  class="form-control "     type="text"  ng-model="createPhotoInfo.name" maxlength="30"  placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber"  autocomplete="off"></dd>
+            <dd><span>上传图片：</span>
+              <div class="inline-block">
+                <button type="button"  class="btn btn-info " id="upPhotosBtn"> 上传公司实景 <i></i></button>
+                <i class="f12 c-999 ml10">(上传真实清晰的公司照片，有助于提高业主认可度哟)</i>
+                <div class="img-show-box create-dialog"></div> <input type="hidden"  ng-model="createPhotoInfo.url"  />
+              </div>
+            </dd>
+            <dd><span>图片描述：</span><textarea class="form-control " ng-model="createPhotoInfo.description"    rows="6" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea>
+              <br><span></span><i>{{createPhotoInfo.description | monitorWords}}/500</i></dd>
+            <p class="text-center c-red f12 "><em ng-bind="createPhotoInfo.errorMsg"></em></p>
+          </dl>
+
+        </div>
+      </div>
+      <div class="modal-footer" ng-show="!maxlengtherr">
+        <button type="button" class="btn btn-primary "  ng-click="createPhotoSumbit(createPhotoInfo)" >确定</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<!--dialog上传视频模块-->
+<div class="modal fade upVideoDialog create-dialog-box" >
+  <div class="modal-dialog " style="width: 760px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" ng-if="createVideoTitleAdd">添加视频</h4>
+        <h4 class="modal-title" ng-if="!createVideoTitleAdd">编辑视频</h4>
+      </div>
+      <div class="modal-body" ng-show="maxlengtherr">
+        <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+      </div>
+      <div class="modal-body" ng-show="!maxlengtherr" >
+        <div class="dialog-content ml20 ">
+          <dl class="  form-inline form-group" >
+            <dd><span>视频名称：</span><input  class="form-control "     type="text"  ng-model="createVideoInfo.name" maxlength="30"  placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber"  autocomplete="off"></dd>
+            <dd><span>上传视频：</span>
+              <div class="inline-block">
+                <button type="button"  class="btn btn-info " id="upVideoBtn"> 选择视频 <i></i></button>
+                <em class="f12 c-999 ml10">（上传视频格式为mp4；单个视频不超过200M。）</em>
+                <div class="mt10 video-list-content"></div><input type="hidden"  ng-model="createVideoInfo.url"  />
+              </div>
+            </dd>
+            <dd>
+              <span style="vertical-align: top">缩略图：</span>
+              <div class="inline-block">
+                <input type="hidden" ng-model="createVideoInfo.duration"/>
+                <input type="text" class="form-control " ng-model="createVideoInfo.second" ng-maxlength="5" ng-minlength="1"  ng-pattern="pubRegex.short_number" maxlength="5" style="width: 100px" >
+                <button type="button"  class="btn btn-info " id="getVideoPic" style='min-width: 136px' ng-disabled="!createVideoInfo.url" ng-click="createVideoShowVideoPics(createVideoInfo)">查看缩略图<i></i></button>
+                <em class="f12 c-999">（默认获取视频第<i class="defSec"></i>秒图片，可手动设置秒数。）</em>
+                <p class='mt10' ng-show="createVideoShowPics" ><img ng-src="{{createVideoShowPics}}"/><p>
+              </div>
+            </dd>
+            <p class="text-center c-red f12 "><em ng-bind="createVideoInfo.errorMsg"></em></p>
+          </dl>
+        </div>
+      </div>
+      <div class="modal-footer" ng-show="!maxlengtherr">
+        <button type="button" class="btn btn-primary "  ng-click="createVideoSumbit(createVideoInfo)" >确定</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!--dialog上传720模块-->
+<div class="modal fade up720Dialog  create-dialog-box">
+  <div class="modal-dialog " style="width: 600px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" ng-if="create720TitleAdd">添加720</h4>
+        <h4 class="modal-title" ng-if="!create720TitleAdd">编辑720</h4>
+      </div>
+      <div class="modal-body" ng-show="maxlengtherr">
+        <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+      </div>
+      <div class="modal-body"  ng-show="!maxlengtherr" >
+        <div class="dialog-content ml20 ">
+          <dl class="  form-inline form-group" >
+            <dd>
+              <form action="" method="post" enctype="multipart/form-data" target="upload" class="from720 " >
+                <input  class="krpano-hidden form-control "  disabled   ng-model="create720Info.pathOf720" ng-required="true" />
+
+                <label  for="upfiles">
+                  <div type="button" class="btn btn-info ">选择文件并上传<i></i></div>
+                  <input type="file"   style="display: none" id="upfiles" name="file" >
+                </label>
+                <input type="hidden" name="url"  value="{{childURL}}">
+              </form>
+              <iframe id="krpano-iframe" name="upload" frameborder="0" style="display: none" ></iframe>
+
+            </dd>
+
+            <p class="text-center c-red f12 "> <i class="loading f12 c-green block"></i>{{create720Info.errorMsg}}</p>
+          </dl>
+
+        </div>
+      </div>
+      <div class="modal-footer" ng-show="!maxlengtherr">
+        <button type="button" class="btn btn-primary "  ng-click="create720Sumbit(create720Info)" >确定</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div ng-include="'/templates/partial/show-video.html'"></div>
+<div ng-include="'/templates/partial/show-img.html'"></div>
+<div ng-include="'/templates/partial/show-720.html'"></div>

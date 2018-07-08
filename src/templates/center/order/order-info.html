@@ -1,0 +1,85 @@
+
+<div class="crumbs">
+    <h3>订单详情</h3>
+    <p><a ui-sref="main.order-list" >订单管理</a> > <a ui-sref="main.order-list" >订单列表</a> > 订单详情</p>
+</div>
+
+<div class="content-box " style="min-width: 1100px">
+    <div class="tab-btn">
+        <ul>
+            <li ng-show="type==2">
+                <a ng-href="#/main/order-list-info/order-base-step-info?id={{getId}}&type={{type}}"  class="hover">订单信息</a>
+                <a href="#/main/order-list-info/order-step-info?id={{getId}}&type={{type}}">进度信息</a>
+                <a href="#/main/order-list-info?id={{getId}}&type={{type}}">资金信息</a>
+                <a href="#/main/order-list-info?id={{getId}}&type={{type}}">操作详情</a>
+                <a ng-href="#/main/order-list-info/order-refund-list?id={{getId}}&type={{type}}" >退款信息</a>
+            </li>
+            <li ng-show="type==1">
+                <a ng-href="#/main/order-list-info/order-base-info?id={{getId}}&type={{type}}"  class="hover">订单信息</a>
+                <a href="#/main/order-list-info?id={{getId}}&type={{type}}">操作详情</a>
+                <a ng-href="#/main/order-list-info/order-refund-list?id={{getId}}&type={{type}}" >退款信息</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="tab-btn-content mt30">
+        <ul>
+            <li ui-view="" style="display: block" ></li>
+            <!--资金信息-->
+            <li ng-if="type==2">
+                <h4>资金信息</h4>
+                <table class=" table   table-hover table-bordered  table-striped text-center mt10 ">
+                    <thead >
+                    <tr>
+                        <td>流水号</td>
+                        <td>金额</td>
+                        <td>交易分类</td>
+                        <td>所属者</td>
+                        <td>渠道</td>
+                        <td>交易状态</td>
+                        <td>时间</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-repeat="g in result">
+                        <td ng-bind="g.serialNumber "></td>
+                        <td ng-bind="g.amount "></td>
+                        <!--<td  ng-init="payType={1:'支付',2:'退款',3:'转账'}" ng-bind="payType[g.journalType]" ></td>-->
+                        <!--<td  ng-init="payOwner={1:'客户',2:'商家',3:'平台'}" >{{payOwner[g.counterParty]}}</td>-->
+                        <!--<td  ng-init="payWay={1 : '余额支付',2 : '绑卡支付',3 : '绑新卡支付',4 : '微信支付',5 : '易宝支付'}"  ng-bind="payWay[g.payTool]"></td>-->
+                        <!--<td  ng-init="resStatus={1 : '成功',2 : '失败'}" ng-bind="resStatus[g.status]  "></td>-->
+                        <td>{{g.journalTypeDesc}}<i class='c-999'>（{{g.incomeDesc}}）</i></td>
+                        <td>{{g.counterPartyDesc}}</td>
+                        <td>{{g.payToolDesc}}</td>
+                        <td>{{g.statusDesc}}</td>
+                        <td ng-bind="g.createTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                    </tr>
+                    <tr ng-if="!result"><td colspan="7" class="f12 c-999 " >没有相关数据!</td></tr>
+                    </tbody>
+                </table>
+            </li>
+            <!--资金信息end-->
+            <li>
+                <h4>操作详情</h4>
+                <table class=" table   table-hover table-bordered  table-striped text-center mt10 ">
+                    <thead >
+                    <tr>
+                        <td>时间</td>
+                        <td>内容</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="g in dolog">
+                        <td ng-bind="g.operateTime | date:'yyyy-MM-dd HH:mm:ss' "></td>
+                        <td ng-bind="g.operateContent"></td>
+                    </tr>
+                    <tr ng-if="!dolog"><td colspan="2" class="f12 c-999 " >没有相关数据!</td></tr>
+                    </tbody>
+                </table>
+            </li>
+            <!--操作详情end-->
+        </ul>
+    </div>
+</div>

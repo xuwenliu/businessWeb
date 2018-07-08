@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="sysApp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=1420" />
+    <title>鹦鹉美家商家管理系统</title>
+    <link rel="stylesheet" type="text/css" href="/static/libs/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/static/libs/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/libs/cropperjs/dist/cropper.min.css" />
+
+    <!--[if lt IE 10]>
+    <script src="/static/libs/iebrowser/browser-not-lt10.js"></script>
+    <style>
+        .view{display: none}
+    </style>
+    <![endif]-->
+</head>
+<body>
+
+<script src="/static/libs/jquery.min.js"></script>
+<script src="/static/libs/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/static/libs/angular.min.js"></script>
+<script src="/static/libs/angular-ui-router.js"></script>
+<script src="/static/libs/angular-cookies/angular-cookies.min.js"></script>
+<script src="/static/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/static/libs/underscore/underscore-min.js"></script>
+<script src="/static/libs/cropperjs/dist/cropper.min.js"></script>
+<script src="/static/libs/jsencrypt.min.js"></script>
+<script src="/static/libs/dragsort/jquery.dragsort-0.5.2.min.js"></script>
+<script src="/config.js"></script>
+<script src="/static/js/app.router.js"></script>
+<script src="/static/js/app.base.js"></script>
+<script src="/static/js/controllers/controller.main.js"></script>
+<script src="/static/js/controllers/controller.auth.js"></script>
+<script src="/static/js/controllers/controller.order.js"></script>
+<script src="/static/js/controllers/controller.bill.js"></script>
+<script src="/static/js/controllers/controller.default.js"></script>
+<script src="/static/js/controllers/controller.manage.js"></script>
+<script src="/static/js/controllers/controller.employee.js"></script>
+<script src="/static/js/controllers/controller.customer.js"></script>
+<script src="/static/js/controllers/controller.case.js"></script>
+<script src="/static/js/controllers/controller.activity.js"></script>
+<script src="/static/js/controllers/controller.mail.js"></script>
+<script src="/static/js/controllers/controller.comments.js"></script>
+
+<script src="/static/js/directives/directive.js"></script>
+<script src="/static/js/filters/filter.base.js"></script>
+<script src="/static/js/services/service.base.js"></script>
+
+<!--upload-->
+<script src="/static/libs/plupload/js/plupload.full.min.js"></script>
+<script src="/static/libs/qiniu-js-sdk/dist/qiniu.min.js"></script>
+<div ui-view="" class="view"></div>
+<script>
+    if((navigator.userAgent).indexOf("Safari")> -1&&(navigator.userAgent).indexOf("Chrome")<0){
+        document.querySelector(".view").style.display='none';
+        document.write("请使用IE10+、谷歌浏览器(Chrome)、火狐(Firefox)运行本系统！")
+    }
+
+</script>
+</body>
+</html>
+<!-- cnzz -->
+<script src="https://s95.cnzz.com/z_stat.php?id=1260992257&web_id=1260992257" language="JavaScript"></script>

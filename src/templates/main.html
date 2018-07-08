@@ -1,0 +1,55 @@
+
+<header ng-controller="userInfoController">
+    <ul >
+        <li class="l f20  ">鹦鹉美家商家管理系统 <i class="f12 version-css">{{Version}}</i></li>
+        <li class="r f12 ">
+            <a  data-target='.myModalBox'   data-toggle='modal'  class="c-white mr20 ml50 f14 lh160 cursor"><i class="iconfont f16">&#xe64a;</i>点击扫描二维码下载APP</a> <i class=" ml10"></i>
+            <a ng-click="showMail()" class="cursor f14 c-white mailIcon"><i class="iconfont ml10 f18  v-top  ">&#xe654;</i>站内信</a>
+            <a ng-click="logout()" class="cursor c-white "><i class="iconfont ml20  ">&#xe600;</i>退出系统</a>
+        </li>
+    </ul>
+</header>
+<aside>
+    <section class="f12 c-white">
+        <span ng-if="headImage"><img ng-src="{{headImage}}&imageView2/1/w/100/h/100"></span>
+        <span ng-if="!headImage"><img src="/static/images/header.jpg"></span>
+        <i class="inline-block f12 " style="margin: 15px 0 0 8px; width: 110px; word-break: break-all">{{userName}}<br ng-if="userName.length<=10"> 欢迎您！</i>
+    </section>
+
+    <menu  class="menus  " >
+        <dl ng-repeat="m in menus.menus" on-menus-finished>
+            <dt class="no-b"><i class="iconfont"></i>{{m.name}}<em class="iconfont mr5 float-right f14">&#xe635;</em></dt>
+            <dd class="lh280 f12">
+                <a ng-repeat="j in m.childs" ui-sref="{{j.url}}">{{j.name}} <em class=" float-right f18"></em></a>
+            </dd>
+        </dl>
+    </menu>
+    <footer class="f12 ">
+        <p>版权所有<br>成都鹦鹉美家网络科技有限公司；蜀ICP备16004989号-1</p>
+    </footer>
+</aside>
+
+<article ui-view=""></article>
+
+<!--dialog 二维码-->
+<div class="modal fade myModalBox" >
+    <div class="modal-dialog " style="width: 600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title no-b">扫描下载鹦鹉美家商家APP</h4>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-content text-center mt20 mb20 lh260 c-666 ">
+                    <ul>
+                        <li class="inline-block mr50"><img src="/static/images/android-e.png" width="200"><br><span>安卓版</span></li>
+                        <li class="inline-block  ml50"><img src="/static/images/ios-e.png" width="200"><br><span>iOS版</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+

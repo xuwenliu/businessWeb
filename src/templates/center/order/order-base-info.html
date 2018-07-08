@@ -1,0 +1,101 @@
+
+<h4>基本信息</h4>
+<div class="content-box-model mt10">
+   <ul class="model-inline lh220">
+       <li><span>订单编号：</span> {{dataI.basicOrderInfoVo.orderNum }}</li>
+       <li><span>订单内容：</span> {{dataI.basicOrderInfoVo.contentType }}</li>
+       <li><span>订单状态：</span>  {{dataI.basicOrderInfoVo.orderStatus  }} ({{dataI.basicOrderInfoVo.phaseStatus   }})</li>
+       <li><span>订单总金额：</span> <i class="c-red f18" >￥ {{dataI.basicOrderInfoVo.amount  }}</i> 元</li>
+       <li><span>作品：</span>  {{dataI.basicOrderInfoVo.caseName }}</li>
+       <li><span>聊天：</span>  {{dataI.basicOrderInfoVo.chatName  }}</li>
+       <li><span>合同订单：</span>  {{dataI.basicOrderInfoVo.contractOrderNum  }}</li>
+       <li><span>下单时间：</span>  {{dataI.basicOrderInfoVo.orderCreateTime |date:'yyyy-MM-dd HH:mm:ss'   }}</li>
+   </ul>
+</div>
+
+<h4 class="mt20">房屋信息</h4>
+<div class="content-box-model mt10">
+    <ul class="model-inline lh220">
+        <li><span>小区名称：</span> {{dataI.houseInfoVo.areaName}}</li>
+        <li><span>是否新房：</span> {{dataI.houseInfoVo.houseCondition}}</li>
+        <li><span>户型：</span> {{dataI.houseInfoVo.houseLayout}}</li>
+        <li><span>房屋面积：</span>{{dataI.houseInfoVo.houseArea   }}</li>
+        <li><span>房屋预算：</span> {{dataI.houseInfoVo.houseBudget   }}</li>
+        <li><span>房屋地址：</span> {{dataI.houseInfoVo.houseAddress  }}</li>
+    </ul>
+</div>
+
+<h4 class="mt20">预约内容</h4>
+<div class="content-box-model mt10">
+    <ul class="model-inline f16 c-green"><li>客户预约信息</li></ul>
+    <ul class="model-inline lh220 mt10">
+        <li><span>预约类型：</span> {{dataI.customerBookingInfoVo.contentType}}</li>
+        <li><span>联系人：</span> {{dataI.customerBookingInfoVo.contact}}</li>
+        <li><span>联系电话：</span> {{dataI.customerBookingInfoVo.contactNumber}}</li>
+        <li><span>备注：</span> {{dataI.customerBookingInfoVo.postscript}}</li>
+    </ul>
+    <hr style="border-top: 1px dashed #ccc">
+    <ul class="model-inline f16 c-green" ><li>商家处理信息</li></ul>
+    <ul class="model-inline form-inline lh320 mt10">
+
+        <li><span>主创设计：</span>
+            <select class="form-control" ng-options="v.userId as v.name for v in designTeam" ng-model="dataInfo.designerId " >
+                <option value="">--主创设计选择--</option>
+            </select>
+        </li>
+        <li><span>商务代表：</span>
+            <select class="form-control" ng-options="v.userId as v.name for v in advisorTeam" ng-model="dataInfo.homeAdvisorId" >
+                <option value="">--商务代表选择--</option>
+            </select>
+        </li>
+
+        <li><span>项目经理：</span>
+            <select class="form-control" ng-options="v.userId as v.name for v in pmTeam" ng-model="dataInfo.projectManagerId" >
+                <option value="">--项目经理选择--</option>
+            </select>
+        </li>
+        <li><span>面谈时间：</span>
+            <div class="input-append date form_datetime_start inline-block" >
+                <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+                <input class=" form-control " size="16" placeholder="设置面谈时间" type="text" ng-model="dataInfo.meetingTime " onkeyup="this.value=''" id="beginTime" >
+            </div>
+        </li>
+
+
+        <li><span>面谈地点：</span>
+            <input type="text"   class="form-control" size="70" ng-model="dataInfo.meetingAddress" maxlength="30"  placeholder="详细地址"  />
+        </li>
+        <li ng-if="dataInfo.cancelReason " class="block"><span>取消预约理由：</span> {{dataInfo.cancelReason }}</li>
+        <li class="block"  >
+            <span style="visibility: hidden">提交数据：</span>
+            <button ng-show="!dataI.whetherHandled "  ng-click="submit([dataInfo,true])"  type="button" class="btn btn-primary mr50 ">提交</button>
+            <button ng-show="dataI.whetherCanCancel" data-target='.myModalReason'   data-toggle='modal'  type="button" class="  btn btn-warning mr50 ">取消预约</button>
+            <button   type="button" class="btn btn-primary btn-sm  input-sm " ng-click="createUrl()"> 创建合同订单</button>
+
+        </li>
+    </ul>
+</div>
+
+<!--dialog-->
+<div class="modal fade myModalReason" >
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">取消预约</h4>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-content lh200 form-inline form-group">
+                    <div>
+                        <dl>
+                            <dd><span style="vertical-align: top; width: 100px">取消理由：</span>
+                                <textarea class="form-control" ng-model="cancelReason"  maxlength="50"   style="width:380px"   rows="4"  placeholder="50字以内"></textarea> <i class="c-999">{{cancelReason | monitorWords}}/50</i>
+                            </dd>
+                            <dd><span style="width: 100px"></span><button   ng-click="submitReason(cancelReason)"   type="button" class="  btn btn-danger ">确认取消</button><i class="c-red f12 ml10">{{cancelReasonErrmsg}}</i></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

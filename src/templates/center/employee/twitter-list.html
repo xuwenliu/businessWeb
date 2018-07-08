@@ -1,0 +1,47 @@
+<div class="crumbs">
+    <h3>推客列表</h3>
+    <p><a ui-sref="main.employee" >员工管理</a> > 推客列表</p>
+</div>
+
+<div class="content-box" >
+    <div class="form-inline form-group searchs "  >
+        <select class="form-control input-sm" ng-init="twitterStatusList=[{code:'-1',desc:'全部'},{code:'0',desc:'待审核'},{code:'1',desc:'已认证'},{code:'2',desc:'未通过'}]" ng-options="v.code as v.desc for v in twitterStatusList
+        " ng-model="list.twitterStatus" >
+            <option value="">--推客状态--</option>
+        </select>
+
+        <div class="inline-block f12 float-right">
+            <input type="text" class="form-control input-sm"  placeholder="手机号/姓名" maxlength="12" size="20" ng-model="list.queryKey">
+            <button   type="button" class="btn btn-primary btn-sm  input-sm " ng-click="submitSearch(list)">查询</button>
+        </div>
+    </div>
+
+
+    <table class=" table   table-hover  table-bordered table-striped text-center ">
+        <thead >
+            <tr>
+                <td>姓名</td>
+                <td>手机号</td>
+                <td>客户</td>
+                <td>咨询</td>
+                <!--<td>订单</td>-->
+                <td>推客状态</td>
+                <td>申请时间</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="g in grid.result">
+                <td ng-bind="g.name" ng-click="show(g.id)" class="cursor c-blue"></td>
+                <td ng-bind="g.phone"></td>
+                <td ng-bind="g.customerCount"></td>
+                <td ng-bind="g.chatCount"></td>
+                <!--<td ng-bind="g.orderCount"></td>-->
+                <td ng-bind="g.twitterStatusDesc"></td>
+                <td ng-bind="g.applyTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+            </tr>
+            <tr ng-if="!grid.result||grid.result.length==0"><td colspan="9" class="f12 c-999 " >没有相关数据!</td></tr>
+        </tbody>
+    </table>
+    <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>

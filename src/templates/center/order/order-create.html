@@ -1,0 +1,87 @@
+<div class="crumbs">
+    <h3>创建合同订单</h3>
+    <p><a ui-sref="main.order-list" >订单管理</a> > <a ui-sref="main.order-list" >订单列表</a> > 创建合同订单</p>
+</div>
+
+<div class="content-box " style="min-width: 1100px">
+    <h4 class="inline-block">基本信息</h4><i class="inline-block f12 c-999 ml10"> (‘*’为必填信息)</i>
+    <div class="content-box-model mt10">
+        <ul class="model-inline f16 c-green"><li>关联信息</li></ul>
+        <ul class="model-inline form-inline lh320 mt10">
+            <li><span>订单内容：</span>
+                <select class="form-control  " ng-init="orderTypeContent=[{id:1,value:'设计订单'},{id:2,value:'装修订单'},{id:3,value:'配饰订单'}]" ng-options="v.id as v.value for v in orderTypeContent" ng-required="true" ng-model="dataInfo.contentType" ng-blur="contentType=!dataInfo.contentType"  ng-class="{err:contentType }"  >
+                    <option value="">--订单内容--</option>
+                </select>
+                <i class="c-red">*</i>
+            </li>
+            <li><span>业主账号：</span>
+                <input type="text"   class="form-control" size="20" ng-required="true" ng-blur="phoneNumber=!dataInfo.phoneNumber"  ng-class="{err:phoneNumber }" ng-model="dataInfo.phoneNumber" maxlength="11" ng-disabled="isChangeCheck" placeholder="请输入业主手机号"  />
+                <i class="c-red">*</i>
+                <button ng-click="checkPass(dataInfo.phoneNumber)" ng-disabled="isChangeCheck" type="button" class="btn btn-success  inline-block  ">
+                    <i ng-if="isChangeCheck">校验已通过</i>
+                    <i ng-if="!isChangeCheck">业主校验</i>
+                </button>
+            </li>
+            <li ng-show="isChangeCheck"><span>选择房屋：</span>
+                <!--<select class="form-control" ng-options="v.houseId as v.areaName for v in getHouseTypeList" ng-model="dataInfo.houseId " ng-blur="houseId=!dataInfo.houseId"  ng-class="{err:houseId }"  >-->
+                <!--非必填-->
+                    <select class="form-control" ng-options="v.houseId as v.areaName for v in getHouseTypeList" ng-model="dataInfo.houseId " >
+                    <option value="">--选择房屋--</option>
+                </select>
+            </li>
+            <input type="hidden" ng-model="dataInfo.userId" >
+        </ul>
+
+        <div ng-show="isShowHouseInfo">
+           <hr style="border-top: 1px dashed #ccc">
+           <ul class="model-inline f16 c-green" ><li>房屋信息</li></ul>
+           <ul class="model-inline lh220">
+               <li><span>小区名称：</span> {{dataI.areaName}}</li>
+               <li><span>房屋地址：</span> {{dataI.houseAddress  }}</li>
+               <li><span>是否新房：</span> {{dataI.houseCondition}}</li>
+               <li><span>户型：</span> {{dataI.houseLayout}}</li>
+               <li><span>房屋面积：</span>{{dataI.houseArea   }}</li>
+               <li><span>房屋预算：</span> {{dataI.houseBudget   }}</li>
+           </ul>
+        </div>
+        <hr style="border-top: 1px dashed #ccc">
+        <ul class="model-inline f16 c-green" ><li>团队信息</li></ul>
+        <ul class="model-inline form-inline lh320 mt10">
+
+            <li><span>主创设计：</span>
+                <select class="form-control" ng-options="v.userId as v.name for v in designTeam" ng-model="dataInfo.designerId " >
+                    <option value="">--主创设计选择--</option>
+                </select>
+            </li>
+            <li><span>商务代表：</span>
+                <select class="form-control" ng-options="v.userId as v.name for v in advisorTeam" ng-model="dataInfo.homeAdvisorId" >
+                    <option value="">--商务代表选择--</option>
+                </select>
+            </li>
+
+            <li><span>项目经理：</span>
+                <select class="form-control" ng-options="v.userId as v.name for v in pmTeam" ng-model="dataInfo.projectManagerId" >
+                    <option value="">--项目经理选择--</option>
+                </select>
+            </li>
+            <li class="block"><span>合同照片：</span>
+                <div class="upimg-inline-block " style="width: 80%">
+                    <ul>
+                        <li ><button type="button"  class="btn btn-info " id="contractPhotos"> 上传合同照片 <i></i> </button>
+                            <div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.contractPhotos " /></li>
+                    </ul>
+                </div>
+                <!---->
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="text-center">
+        <input type="hidden" ng-model="dataInfo.userId">
+        <button ng-click="submit([dataInfo,true])" ng-disabled="!isChangeCheck" type="button" class="btn btn-primary mr50 mt20 pl20 pr20  w160  "> 下一步 </button>
+    </div>
+
+</div>
+
+<div ng-include="'/templates/partial/show-img.html'"></div>

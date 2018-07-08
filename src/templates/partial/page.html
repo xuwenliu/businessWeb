@@ -1,0 +1,17 @@
+
+<div class=" float-right  mt20 pages  f12 mb10  " ng-show="pagination.totalPageNum">
+    <ul>
+        <li ng-click="first()" class="hover" ng-class="{hover:pagination.currentPageNum==1}"  >首页</li>
+        <li ng-click="pre()" ng-class="{'disabled':pagination.currentPageNum<=1}">上页</li>
+        <span ><em>{{pagination.currentPageNum}}</em> / <em ng-bind="pagination.totalPageNum"></em></span>
+        <li ng-click="next()" ng-class="{'disabled':pagination.currentPageNum>=pagination.totalPageNum}" >下页</li>
+        <li ng-click="last()"  ng-class="[{hover:pagination.currentPageNum==pagination.totalPageNum && pagination.totalPageNum!=1},{disabled:pagination.totalPageNum==1}]" >尾页</li>
+        <p class="inline-block ml20 c-999 " >
+            转到 <input type="text"   onkeyup="value=value.replace(/[^\d]/g,'')"  maxlength="3" size="3" ng-model="pagination.currentPageNum" ng-change="pageNumberChanged(pagination.currentPageNum)"> 页
+        </p>
+        <p class="inline-block ml20 c-999 ">
+            每页 <select ng-model="pageSize" ng-change="pageSizeChanged(pageSize)" class="c-666 ml5"  ng-options="op for op in pageSizes" ></select>
+        </p>
+    </ul>
+</div>
+<i class="clearfix"></i>

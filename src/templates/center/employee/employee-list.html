@@ -1,0 +1,154 @@
+
+<div class="crumbs">
+  <h3>员工列表</h3>
+  <p><a ui-sref="main.employee" >员工管理</a> > 员工列表</p>
+</div>
+
+<div class="content-box">
+  <div class="form-inline form-group searchs"  >
+    <input type="text" class="form-control input-sm"  placeholder="姓名或手机号" maxlength="11" size="30" ng-model="list.queryKey">
+   <select class="form-control input-sm" ng-options="v.id as v.value for v in detailTypes" ng-model="list.userDetailType"   >
+      <option value="">--选择角色--</option>
+    </select>
+
+    <select class="form-control input-sm " ng-options="v.id as v.value for v in employeeStatus" ng-model="list.status"   >
+      <option value="">--选择状态--</option>
+    </select>
+
+    <button type="button" class="btn btn-primary btn-sm  input-sm " ng-click="submitSearch(list)">  <i class="iconfont f12 no-b ">&#xe644;</i>查询</button>
+    <button type="button" class="btn btn-primary btn-sm float-right " ui-sref="main.employee-add" > 新增员工</button>
+  </div>
+
+  <table class=" table   table-hover  table-bordered table-striped text-center ">
+    <thead >
+    <tr>
+      <td>姓名</td>
+      <td>角色</td>
+      <td>手机号</td>
+      <td id="caseNum">作品（上架 / 总数）</td>
+      <td id="totalChatCount" class="cursor">咨询（当前 / 总数）</td>
+      <td>是否推客</td>
+      <td>状态</td>
+      <td>操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result">
+      <td ng-bind="g.employeeDto.name"></td>
+      <td ng-bind="g.employeeDto.userDetailTypeDesc"></td>
+      <td ng-bind="g.employeeDto.userPhone"></td>
+      <td>{{g.caseNum}} / {{g.caseTotal}}</td>
+      <td>{{g.currentChatCount}} / {{g.totalChatCount}}</td>
+      <td><i ng-if="g.twitterStatus">是</i><i ng-if="!g.twitterStatus">否</i></td>
+      <td>
+        <i ng-if="g.employeeDto.available" >启用</i>
+        <i ng-if="!g.employeeDto.available">禁用</i>
+      </td>
+      <td>
+      	<button  class="btn btn-danger btn-xs"  ng-click=dimission(g.employeeDto.id)>离职</button>
+        <button  class="btn btn-primary btn-xs"  ng-click=edit([1,g.employeeDto.id])>修改</button>
+        <button  class="btn btn-warning btn-xs" ng-if="!g.employeeDto.available" ng-click=isAvailable([true,g.employeeDto.id,g.employeeDto.name])>启用</button>
+        <button  class="btn btn-danger btn-xs" ng-if="g.employeeDto.available"  ng-click=isAvailable([false,g.employeeDto.id,g.employeeDto.name])>禁用</button>
+        <button  class="btn btn-success btn-xs"   ng-click=showCase([g.employeeDto.id,g.employeeDto.name]) >员工作品</button>
+        <button  class="btn btn-info btn-xs "  ng-click=roleChange([g.employeeDto.id,g.employeeDto.name,g.employeeDto.showHead])>角色变更</button>
+      </td>
+    </tr>
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="10" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>
+
+
+<!--dialog 离职-->
+<div class="modal fade createDialog-dimission">
+	<div class="modal-dialog " style="width: 650px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">员工离职</h4>
+			</div>
+			<div class="modal-body">
+				<div class="dialog-content ml20 ">
+					<dl class="form-inline form-group text-center">
+						<dd style="background: #eee;font-size: 12px;color: #666;">
+							提示：当前员工绑定的以下作品将下架，与员工相关的会话将予以保留，并解除员工的在职关系
+						</dd>
+						<dd class="text-left" style="display: flex;flex-wrap: wrap;color: #337ab7;margin-top: 20px;">
+							<p style="width: 30%;" ng-repeat="g in caseInfoDtos">{{g.caseName}}</p>
+						</dd>
+						<dd ng-if="!caseInfoDtos">没有相关数据!</dd>
+					</dl>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary " ng-click="sack(userId,caseInfoDtos)">提交并解除员工</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+		
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+	
+	<!--dialog 角色变更-->
+<div class="modal fade createDialog-roleChange">
+	<div class="modal-dialog " style="width: 750px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button ng-click="closeDialogRoleChange()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">员工角色变更</h4>
+			</div>
+			<div class="modal-body">
+				<div class="dialog-content ml20 ">
+					<dl class="form-inline form-group">
+						<dd style="background: #eee;font-size: 12px;color: #666;text-align: center;">
+							<p>提示：您当前正在进行员工用户角色变更， 此操作将影响员工已绑定的作品，您需要在以下表单中选择公司员工接管替换；</p>
+         			<p style="padding-left: 28px;">已有的业主会话聊天不受影响；完成操作点击 提交变更 即可完成角色变更；若有疑问可致电客服寻求咨询与帮助；</p>
+						</dd>
+						<dd class="mt20" >
+							<i>当前员工绑定的作品</i>
+							<p class="float-right mr50" ng-show="caseInfoDtos">
+								<label class="mr20"><input type="checkbox" style="vertical-align: top;"  ng-model="unifyTakeOver"/>统一接管</label>
+								<select ng-options="v.userId as v.userName+'-'+v.userDetailTypeDesc for v in employeeInfoDtos" ng-show="unifyTakeOver" class="form-control input-sm" ng-model="unifySelectUser">
+									<option value="">--请选择接管员工--</option>
+								</select>
+							</p>
+						</dd>
+						<dd class="f12" style="color: #337ab7;">
+								<p class="text-left mt20" style="display: flex;justify-content: space-between;"  ng-repeat="g in caseInfoDtos">
+									<i>{{g.caseName}}</i>
+									<select ng-disabled="forbidSelect" ng-options="v.userId as v.userName+'-'+v.userDetailTypeDesc for v in employeeInfoDtos" class="form-control input-sm mr50" ng-model="sigleSelectUser[$index]">
+									<option value="">--接管的{{g.employeeDetailTypeDesc}}--</option>
+								</select>
+								</p>
+								
+						</dd>
+						<dd ng-if="!caseInfoDtos" class="text-center">没有相关数据!</dd>
+						
+						<dd class="mt20">
+							<i>当前员工角色变更</i>
+						</dd>
+						<dd>
+							<a ng-href="{{userInfo.showHead}}" target="_blank"><img width="50" height="50" style="vertical-align: middle;" ng-src="{{userInfo.showHead}}" alt="" /></a>
+							<i class="ml10 mr20">{{userInfo.name}}</i>
+							<select class="form-control input-sm "  ng-options="v.code as v.desc for v in employeeTypes" ng-model="employeeType">
+								<option value="">--请选择用户角色--</option>
+							</select>
+						</dd>
+						<p class="text-center c-red f12 "> <i class="loading f12 c-green block"></i>{{userInfo.errorMsg}}</p>
+					</dl>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary " ng-click="submitRoleChange(userInfo.userId,caseInfoDtos,unifySelectUser,employeeType)">提交变更</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

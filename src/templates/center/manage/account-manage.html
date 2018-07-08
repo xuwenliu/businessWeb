@@ -1,0 +1,413 @@
+<style>
+    .form-inline span {width: 140px;}
+    .queryBanks {position: absolute; top: 43px; left: 144px; width: 319px; height: auto; border: 1px solid #cccccc; background-color: #ffffff;}
+</style>
+<div class="crumbs">
+  <h3>银行卡信息</h3>
+  <p><a ui-sref="main.account-manage" >账户管理</a>  > <a ui-sref="main.accountInfo" >资金总览</a> > 银行卡信息</p>
+</div>
+
+<div class="content-box" style="min-width: 1100px;">
+    <!-- 已添加账户 -->
+    <div class="form-inline form-group" ng-show="hasAccount">
+        <p class="model-title mt50 block">基本信息</p>
+        <!-- 对私账户 -->
+        <dl ng-show="dataInfo.accountType == 1">
+            <dd>
+                <span>账户类型：</span>{{accountType}}
+            </dd>
+            <dd>
+                <span>银行卡号：</span>{{dataInfo.privateAccountVo.bank.cardNumber}}
+            </dd>
+            <dd>
+                <span>银行名称：</span>{{dataInfo.privateAccountVo.bank.bankName}}
+            </dd>
+            <dd>
+                <span>开户行地址：</span>{{dataInfo.privateAccountVo.bank.province}}{{dataInfo.privateAccountVo.bank.city}}
+            </dd>
+            <dd>
+                <span>持卡人：</span>{{dataInfo.privateAccountVo.owner.name}}
+            </dd>
+            <dd>
+                <span>身份证号：</span>{{dataInfo.privateAccountVo.cert.idCardNumber}}
+            </dd>
+            <dd>
+                <span>手机号码：</span>{{dataInfo.privateAccountVo.owner.phoneNumber}}
+            </dd>
+        </dl>
+        <!-- 对公账户 -->
+        <dl ng-show="dataInfo.accountType == 2">
+            <dd>
+                <span>账户类型：</span>{{accountType}}
+            </dd>
+            <dd>
+                <span>企业名称：</span>{{dataInfo.publicAccountVo.owner.companyName}}
+            </dd>
+            <dd>
+                <span>法人姓名：</span>{{dataInfo.publicAccountVo.owner.legalPersonName}}
+            </dd>
+            <dd>
+                <span>银行卡号：</span>{{dataInfo.publicAccountVo.bank.cardNumber}}
+            </dd>
+            <dd>
+                <span>银行名称：</span>{{dataInfo.publicAccountVo.bank.bankName}}
+            </dd>
+            <dd>
+                <span>开户行地址：</span>{{dataInfo.publicAccountVo.bank.province}}{{dataInfo.publicAccountVo.bank.city}}
+            </dd>
+            <dd>
+                <span>联系人：</span>{{dataInfo.publicAccountVo.owner.name}}
+            </dd>
+            <dd>
+                <span>手机号码：</span>{{dataInfo.publicAccountVo.owner.phoneNumber}}
+            </dd>
+            <dd ng-show="dataInfo.publicAccountVo.certType == 1">
+                <span>营业执照：</span>{{dataInfo.publicAccountVo.noMergeCert.businessLicence}}
+            </dd>
+            <dd ng-show="dataInfo.publicAccountVo.certType == 2">
+                <span>三证合一：</span>{{dataInfo.publicAccountVo.mergedCert.mergedLicence}}
+            </dd>
+        </dl>
+        <p class="model-title mt50 block">证件信息</p>
+        <!-- 对私账户 -->
+        <dl ng-show="dataInfo.accountType == 1">
+            <dd>
+                <span style="vertical-align:top">身份证正面照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.privateAccountVo.cert.idCardFront}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.privateAccountVo.cert.idCardFront}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">身份证反面照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.privateAccountVo.cert.idCardBack }}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.privateAccountVo.cert.idCardBack }}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">持证照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.privateAccountVo.cert.idCardHold }}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.privateAccountVo.cert.idCardHold }}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">银行卡正面照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.privateAccountVo.cert.bankCardFront }}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.privateAccountVo.cert.bankCardFront }}">
+                </a>
+            </dd>
+        </dl>
+        <!-- 对公账户-普通三证 -->
+        <dl ng-show="dataInfo.accountType == 2 && dataInfo.publicAccountVo.certType == 1">
+            <dd>
+                <span style="vertical-align:top">法人身份证正面照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.noMergeCert.idCardFront}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.noMergeCert.idCardFront}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">法人身份证反面照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.noMergeCert.idCardBack}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.noMergeCert.idCardBack}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">银行开户许可证照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.noMergeCert.bankAccountPerm}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.noMergeCert.bankAccountPerm}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">组织机构代码证照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.noMergeCert.orgCodeCert}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.noMergeCert.orgCodeCert}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">税务登记证照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.noMergeCert.taxPayCert}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.noMergeCert.taxPayCert}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">营业执照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.noMergeCert.bizCert}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.noMergeCert.bizCert}}">
+                </a>
+            </dd>
+        </dl>
+        <!-- 对公账户-三证合一 -->
+        <dl ng-show="dataInfo.accountType == 2 && dataInfo.publicAccountVo.certType == 2">
+            <dd>
+                <span style="vertical-align:top">法人身份证正面照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.mergedCert.idCardFront}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.mergedCert.idCardFront}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">法人身份证反面照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.mergedCert.idCardBack}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.mergedCert.idCardBack}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">银行开户许可证照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.mergedCert.bankAccountPerm}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.mergedCert.bankAccountPerm}}">
+                </a>
+            </dd>
+            <dd>
+                <span style="vertical-align:top">三证合一照：</span>
+                <a class="preview-img cursor" href="javascript:void(0);">
+                    <img ng-src="{{dataInfo.publicAccountVo.mergedCert.mergedCert}}&imageView2/1/w/100/h/100" width="100"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.publicAccountVo.mergedCert.mergedCert}}">
+                </a>
+            </dd>
+        </dl>
+    </div>
+
+
+    <!-- 未添加账户 -->
+    <div class="form-inline form-group" ng-show="!hasAccount">
+        <p class="model-title mt50 block">基本信息</p>
+        <div>
+            <dl>
+                <dd>
+                    <span><i class="c-red">*</i> 账户类型：</span>
+                    <label for="radio1" class="f12 inline-block"><input id="radio1" type="radio" ng-value="1" name="privateAccount" ng-model="dataInfo.accountType">对私账户</label>
+                    <label for="radio2" class="f12 inline-block"><input id="radio2" type="radio" ng-value="2" ng-model="dataInfo.accountType" name="privateAccount">对公账户</label>
+                </dd>
+            </dl>
+            <!-- 对私账户基本信息 -->
+            <dl ng-show="dataInfo.accountType == 1" class="privateAccount">
+                <dd>
+                    <span><i class="c-red">*</i> 银行卡号：</span>
+                    <input type="text" class="form-control" maxlength="30" size="40"  placeholder="请输入正常的银行卡号" ng-model="dataInfo.privateAccountVo.bank.cardNumber"  ng-pattern="pubRegex.short_number"  ng-maxlength="30" ng-minlength="6"   ng-blur="privateAccountCardNumber  = !dataInfo.privateAccountVo.bank.cardNumber"  ng-class="{err:privateAccountCardNumber  }" ng-required="true">
+                </dd>
+                <dd style="position:relative">
+                    <span><i class="c-red">*</i> 银行名称：</span>
+                    <input type="text" class="form-control" maxlength="20" size="40" placeholder="请输入正常的银行名称" ng-model="dataInfo.privateAccountVo.bank.bankName"  ng-pattern="pubRegex.backname"  ng-maxlength="20" ng-minlength="2" ng-blur="privateAccountBankName = !dataInfo.privateAccountVo.bank.bankName"  ng-class="{err:privateAccountBankName}" ng-required="true" list="privateBanksList">
+                    <datalist class="queryBanks" id="privateBanksList">
+                        <option ng-repeat="item in banksList track by $index" value="{{item}}"></option>
+                    </datalist>
+                </dd>
+                <dd>
+                    <span class="pa"><i class="c-red">*</i> 注册地址：</span>
+                    <div style="margin-left: 144px;">
+                        <select class="form-control " ng-options="item for item in privateAccountProvinces" ng-model="dataInfo.privateAccountVo.bank.province" ng-required="true" ng-blur="privateAccountProvince =!dataInfo.privateAccountVo.bank.province"  ng-class="{err:privateAccountProvince }" >
+                        <option value="">--省--</option>
+                        </select>
+
+                        <select class="form-control " ng-options="item for item in privateAccountCities" ng-model="dataInfo.privateAccountVo.bank.city"  ng-required="true" ng-blur="privateAccountCity =!dataInfo.privateAccountVo.bank.city"  ng-class="{err:privateAccountCity }"  >
+                        <option value="">--市--</option>
+                        </select>
+                        
+                    </div>
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 持卡人：</span>
+                    <input type="text" class="form-control" maxlength="30" size="40"  placeholder="请输入持卡人姓名" ng-model="dataInfo.privateAccountVo.owner.name"  ng-pattern="pubRegex.realname"  ng-maxlength="30" ng-minlength="2" ng-required="true" ng-blur="privateAccountName = !dataInfo.privateAccountVo.owner.name"  ng-class="{err:privateAccountName}"  >
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 身份证号：</span>
+                    <input type="text" class="form-control" maxlength="18" size="40"  placeholder="请输入15-18位身份证号码" ng-model="dataInfo.privateAccountVo.cert.idCardNumber"  ng-pattern="pubRegex.identity"  ng-maxlength="18" ng-minlength="15" ng-required="true"  ng-blur="privateAccountIdCardNumber = !dataInfo.privateAccountVo.cert.idCardNumber "  ng-class="{err:privateAccountIdCardNumber}"  >
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 手机号码：</span>
+                    <input type="text" class="form-control" maxlength="11" size="40"  placeholder="请输入11位手机号码" ng-model="dataInfo.privateAccountVo.owner.phoneNumber"  ng-pattern="pubRegex.phone"  ng-maxlength="11" ng-minlength="11"  ng-required="true" ng-blur="privateAccountPhoneNumber = !dataInfo.privateAccountVo.owner.phoneNumber" ng-class="{err:privateAccountPhoneNumber}">
+                </dd>
+            </dl>
+            <!-- 对公账户基本信息 -->
+            <dl ng-show="dataInfo.accountType == 2" class="publicAccount">
+                <dd>
+                    <span><i class="c-red">*</i> 企业名称：</span>
+                    <input type="text" class="form-control" maxlength="100" size="40"  placeholder="请输入企业名称" ng-model="dataInfo.publicAccountVo.owner.companyName"  ng-pattern="pubRegex.backname"  ng-maxlength="100" ng-minlength="2"  ng-blur="publicAccountCompanyName = !dataInfo.publicAccountVo.owner.companyName "  ng-class="{err:publicAccountCompanyName}"  >
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 法人姓名：</span>
+                    <input type="text" class="form-control" maxlength="30" size="40"  placeholder="请输入法人姓名" ng-model="dataInfo.publicAccountVo.owner.legalPersonName"  ng-pattern="pubRegex.realname"  ng-maxlength="30" ng-minlength="2"   ng-blur="publicAccountLegalPersonName = !dataInfo.publicAccountVo.owner.legalPersonName"  ng-class="{err:publicAccountLegalPersonName}"  >
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 银行卡号：</span>
+                    <input type="text" class="form-control" maxlength="30" size="40"  placeholder="请输入银行卡号" ng-model="dataInfo.publicAccountVo.bank.cardNumber"  ng-pattern="pubRegex.short_number"  ng-maxlength="30" ng-minlength="6"   ng-blur="publicAccountCardNumber  = !dataInfo.publicAccountVo.bank.cardNumber "  ng-class="{err:publicAccountCardNumber  }"  >
+                </dd>
+                <dd style="position:relative">
+                    <span><i class="c-red">*</i> 银行名称：</span>
+                    <input type="text" class="form-control" maxlength="20" size="40"  placeholder="请输入银行卡名称" ng-model="dataInfo.publicAccountVo.bank.bankName"  ng-pattern="pubRegex.backname"  ng-maxlength="20" ng-minlength="2"   ng-blur="publicAccountBankName = !dataInfo.publicAccountVo.bank.bankName"  ng-class="{err:publicAccountBankName}" list="publicBanksList">
+                    <datalist class="queryBanks" id="publicBanksList">
+                        <option ng-repeat="item in banksList track by $index" value="{{item}}"></option>
+                    </datalist>
+                </dd>
+                <dd>
+                    <span class="pa"><i class="c-red">*</i> 注册地址：</span>
+                    <div style="margin-left: 144px;">
+                        <select class="form-control " ng-options="item for item in publicAccountProvinces" ng-model="dataInfo.publicAccountVo.bank.province"   ng-required="true" ng-blur="publicAccountProvince =!dataInfo.publicAccountVo.bank.province"  ng-class="{err:publicAccountProvince }" >
+                        <option value="">--省--</option>
+                        </select>
+
+                        <select class="form-control " ng-options="item for item in publicAccountCities" ng-model="dataInfo.publicAccountVo.bank.city"  ng-required="true" ng-blur="publicAccountCity =!dataInfo.publicAccountVo.bank.city"  ng-class="{err:publicAccountCity }"  >
+                        <option value="">--市--</option>
+                        </select>
+                        
+                    </div>
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 联系人：</span>
+                    <input type="text" class="form-control" maxlength="10" size="40"  placeholder="请输入联系人姓名" ng-model="dataInfo.publicAccountVo.owner.name"  ng-pattern="pubRegex.realname"  ng-maxlength="10" ng-minlength="2"   ng-blur="publicAccountName = !dataInfo.publicAccountVo.owner.name "  ng-class="{err:publicAccountName}"  >
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 手机号码：</span>
+                    <input type="text" class="form-control" maxlength="11" size="40"  placeholder="请输入持卡人11位手机号码" ng-model="dataInfo.publicAccountVo.owner.phoneNumber"  ng-pattern="pubRegex.phone"  ng-maxlength="11" ng-minlength="11"   ng-blur="publicAccountPhoneNumber = !dataInfo.publicAccountVo.owner.phoneNumber"  ng-class="{err:publicAccountPhoneNumber}"  >
+                </dd>
+                <dd>
+                    <span><i class="c-red">*</i> 三证合一：</span>
+                    <label for="checkbox1"><input type="checkbox" id="checkbox1" ng-true-value="2" ng-false-value="1" ng-model="dataInfo.publicAccountVo.certType"> 是否三证合一</label>
+                </dd>
+                <dd ng-show="dataInfo.publicAccountVo.certType == 1">
+                    <span><i class="c-red">*</i> 营业执照：</span>
+                    <input type="text" class="form-control noMergeCert" maxlength="100" size="40"  placeholder="请输入营业执照号" ng-model="dataInfo.publicAccountVo.noMergeCert.businessLicence"  ng-pattern="pubRegex.short_number"  ng-maxlength="100" ng-minlength="2"   ng-blur="publicAccountBusinessLicence = !dataInfo.publicAccountVo.noMergeCert.businessLicence"  ng-class="{err:publicAccountBusinessLicence}"  >
+                </dd>
+                <dd ng-show="dataInfo.publicAccountVo.certType == 2">
+                    <span><i class="c-red">*</i> 三证合一号：</span>
+                    <input type="text" class="form-control mergedCert" maxlength="100" size="40"  placeholder="请输入三证合一号" ng-model="dataInfo.publicAccountVo.mergedCert.mergedLicence"  ng-pattern="pubRegex.mergeCert"  ng-maxlength="100" ng-minlength="2"   ng-blur="publicAccountMergedLicence = !dataInfo.publicAccountVo.mergedCert.mergedLicence"  ng-class="{err:publicAccountMergedLicence}"  >
+                </dd>
+            </dl>
+        </div>
+        <p class="model-title mt50 block">证件信息</p>
+        <!-- 对私账户证件信息 -->
+        <div ng-show="dataInfo.accountType == 1" class="privateAccount">
+            <dl>
+                <dd>
+                    <span>身份证正面照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="idCardFront"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.cert.idCardFront" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>身份证反面照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="idCardBack"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.privateAccountVo.cert.idCardBack" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>手持身份证照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="idCardHold"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.privateAccountVo.cert.idCardHold" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>银行卡正面照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="bankCardFront"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.privateAccountVo.cert.bankCardFront" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd class="mt30">
+                    <span></span>
+                    <button class="btn btn-primary" ng-click="submit(dataInfo.privateAccountVo)">提交</button>
+                </dd>
+            </dl>
+        </div>
+        <!-- 对公账户证件信息 -->
+        <div ng-show="dataInfo.accountType == 2" class="publicAccount">
+            <!-- 三证合一 -->
+            <dl ng-show="dataInfo.publicAccountVo.certType == 2" class="publicMergedCert">
+                <dd>
+                    <span>法人身份证正面照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="mergedCertIdCardFront"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.mergedCert.idCardFront" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>法人身份证反面照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="mergedCertIdCardBack"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.mergedCert.idCardBack" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>银行开户许可证照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="mergedCertBankAccountPerm"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.mergedCert.bankAccountPerm" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>三证合一照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="mergedCertPhoto"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.mergedCert.mergedCert" /></li>
+                        </ul>
+                    </div>
+                </dd>
+            </dl>
+            <!-- 普通三证 -->
+            <dl ng-show="dataInfo.publicAccountVo.certType == 1" class="publicNoMergeCert">
+                <dd>
+                    <span>法人身份证正面照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="noMergeCertIdCardFront"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.noMergeCert.idCardFront" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>法人身份证反面照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="noMergeCertIdCardBack"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.noMergeCert.idCardBack" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>银行开户许可证照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="noMergeCertBankAccountPerm"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.noMergeCert.bankAccountPerm" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>组织机构代码证照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="noMergeCertOrgCodeCert"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.noMergeCert.orgCodeCert" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>税务登记证照：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="noMergeCertTaxPayCert"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.noMergeCert.taxPayCert" /></li>
+                        </ul>
+                    </div>
+                </dd>
+                <dd>
+                    <span>营业执照：</span>
+                    <div class="upimg-inline-block">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="noMergeCertBizCert"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.publicAccountVo.noMergeCert.bizCert" /></li>
+                        </ul>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dd class="mt30">
+                    <span></span>
+                    <button class="btn btn-primary" ng-click="submit(dataInfo.publicAccountVo)">提交</button>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div ng-include="'/templates/partial/show-img.html'"></div>

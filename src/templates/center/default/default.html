@@ -1,0 +1,76 @@
+<style>
+  table.table-info { width: 80%}
+  table.table-info td{ padding: 2px 30px; border: 1px solid #eee; }
+  table.table-info tr:nth-child(1){background: #f8f8f8; color: #666}
+</style>
+<div class="crumbs">
+  <h3>概况</h3>
+  <p><a ui-sref="main.default" >首页</a> >概况</p>
+</div >
+<!--基础信息-->
+<div class="content-box float-left " style="width: 58%">
+  <div class="def-base lh280 mt10 ml10" >
+    <ul class="l" style="width: 200px" >
+      <li><img ng-src="{{defInfo.companyInfoDto.logoImage}}&imageView2/2/w/160"></li>
+      <li class="lh180 mt20 " > HI！<br><i class="c-green f16">{{defInfo.companyInfoDto.name}}</i><br>欢迎您！</li>
+    </ul>
+    <ul class="r" style="width: 62%">
+      <li class="c-666 ml20">鹦鹉美家已经为贵公司服务了<em class="c-green f18">{{defInfo. serveDays}}</em>天</li>
+      <li class="c-666 ml20">指定商务经理：
+        <table class="table-info lh220 text-center" ng-if="defInfo.companyInfoDto.cityId!==2252" >
+          <tr>
+            <td>姓名</td>
+            <td>电话</td>
+          </tr>
+          <tr>
+            <td>卢一慧</td>
+            <td>13540498341</td>
+          </tr>
+        </table>
+
+        <table class="table-info lh220 text-center" ng-if="defInfo.companyInfoDto.cityId===2252" >
+          <tr>
+            <td>姓名</td>
+            <td>电话</td>
+          </tr>
+          <tr>
+            <td>陈松涛</td>
+            <td>13452157067</td>
+          </tr>
+        </table>
+
+
+         </li>
+    </ul>
+  </div>
+</div>
+
+<div class="content-box float-right " style="width: 40%; padding: 30px 50px">
+  <div class=" form-group text" >
+    <p class=" model-title  block  ">聊天情况统计</p>
+    <dl class="c-green">
+      <dd ><span>今日新增访客数：</span> {{defInfo.newVisitors }}</dd>
+      <dd><span>今日新增聊天数：</span> {{defInfo.newSessions}}</dd>
+      <dd><span>累计访客总数：</span> {{defInfo.totalVisitors}}</dd>
+      <dd><span>累计聊天总数：</span> {{defInfo.totalSessions}}</dd>
+
+    </dl>
+
+
+  <p class=" model-title pt10 block  ">作品情况统计</p>
+    <dl class="c-green">
+      <dd><span>上架作品总数：</span> {{defInfo.totalActiveCases }}</dd>
+      <dd><span>作品总数：</span> {{defInfo.totalCases }}</dd>
+      <dd><span>今日新增收藏作品次数：</span> {{defInfo.newFavtCaseCount}}</dd>
+      <dd><span>累计收藏作品次数：</span> {{defInfo.totalFavtCaseCount}}</dd>
+    </dl>
+  <p class=" model-title pt10 block  ">员工情况统计</p>
+    <dl class="c-green">
+      <dd><span>设计师：</span> {{defInfo.designerCount}}</dd>
+      <dd><span>项目经理：</span> {{defInfo.pmCount }}</dd>
+      <dd><span>监理：</span> 暂无</dd>
+      <dd><span>商务代表：</span> {{defInfo.bdCount}}</dd>
+    </dl>
+  </div>
+
+</div>

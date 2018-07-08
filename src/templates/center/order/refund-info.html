@@ -1,0 +1,143 @@
+<style>
+    .form-group span {width: 120px;}
+</style>
+
+<div class="crumbs">
+    <h3>退款详情</h3>
+    <p><a ui-sref="main.order-list" >订单管理</a> > <a ui-sref="main.refund-list" >退款列表</a> > 退款详情</p>
+</div>
+
+<div class="content-box" style="min-width: 1100px">
+    <h4>基础信息</h4>
+    <div class="refundInfo-box mt10">
+        <div class="clearfix" ng-show="refundInfo.basicInfoVo.areaName">
+            <div class="refundInfo-left">订单名称：</div>
+            <div class="refundInfo-right" ng-bind="refundInfo.basicInfoVo.areaName"></div>
+        </div>
+        <div class="clearfix">
+            <div class="refundInfo-left">订单编号：</div>
+            <div class="refundInfo-right" ng-bind="refundInfo.basicInfoVo.orderNum"></div>
+        </div>
+        <div class="clearfix">
+            <div class="refundInfo-left">已付金额：</div>
+            <div class="refundInfo-right" ng-bind="refundInfo.basicInfoVo.phasePayedAmount"></div>
+        </div>
+        <div class="clearfix">
+            <div class="refundInfo-left">退款金额：</div>
+            <div class="refundInfo-right" ng-bind="refundInfo.basicInfoVo.refundAmount"></div>
+        </div>
+        <div class="clearfix" ng-show="refundInfo.basicInfoVo.phaseName">
+            <div class="refundInfo-left">退款阶段：</div>
+            <div class="refundInfo-right" ng-bind="refundInfo.basicInfoVo.phaseName"></div>
+        </div>
+        <div class="clearfix">
+            <div class="refundInfo-left">退款理由：</div>
+            <div class="refundInfo-right" ng-bind="refundInfo.basicInfoVo.refundReason"></div>
+        </div>
+        <div class="clearfix">
+            <div class="refundInfo-left">申请时间：</div>
+            <div class="refundInfo-right" ng-bind="showTime(refundInfo.basicInfoVo.applyTime)"></div>
+        </div>
+        <div class="clearfix" ng-show="refundInfo.basicInfoVo.refundChannel">
+            <div class="refundInfo-left">退款方式：</div>
+            <div class="refundInfo-right" ng-bind="refundInfo.basicInfoVo.refundChannel"></div>
+        </div>
+        <div class="clearfix" ng-show="refundInfo.basicInfoVo.refundCredences">
+            <div class="refundInfo-left">退款凭证：</div>
+            <div class="refundInfo-right">
+                <a class="preview-img cursor" href="javascript:void(0);" ng-repeat = "item in refundInfo.basicInfoVo.refundCredences track by $index">
+                    <img ng-src="{{item}}&imageView2/1/w/100/h/100" width="100" class="mt10"  data-target=".myModal" data-toggle="modal"  data-img="{{item}}">
+                </a>
+            </div>
+        </div>
+        <div class="clearfix" ng-show="refundInfo.basicInfoVo.transferCredences">
+            <div class="refundInfo-left">转账凭证：</div>
+            <div class="refundInfo-right">
+                <a class="preview-img cursor" href="javascript:void(0);" ng-repeat = "item in refundInfo.basicInfoVo.transferCredences track by $index">
+                    <img ng-src="{{item}}&imageView2/1/w/100/h/100" width="100" class="mt10" data-target=".myModal" data-toggle="modal"  data-img="{{item}}">
+                </a>
+            </div>
+        </div>
+    </div>
+     <h4 class="mt20">退款进度</h4>
+     <div class="refundInfo-box mt10">
+        <dl>
+            <dd ng-repeat="item in refundInfo.progress">
+                <p class="b" ng-bind="item.operateContent"></p>
+                <p><span>时间：</span><span ng-bind="showTime(item.operateTime)"></span></p>
+                <button class="btn btn-primary lBtn" ng-if="item.type === 19 && refundInfo.canHandle" data-target='.refundModal' data-toggle='modal' ng-click="bootDialog({status:0, title:'同意退款'})">同意退款</button>
+                <button class="btn btn-danger mBtn" ng-if="item.type === 19 && refundInfo.canHandle" data-target='.refundModal' data-toggle='modal' ng-click="bootDialog({status:1, title:'拒绝退款'})">拒绝退款</button>
+                <button class="btn btn-success lBtn" ng-if="item.type === 27 && item.operateDetail" data-target='.refundModal' data-toggle='modal' ng-click="bootDialog({status:3, title:'申诉结果', detail:item.operateDetail})">申诉结果</button>
+                <button class="btn btn-success lBtn" ng-if="item.type === 30 && item.operateDetail" data-target='.refundModal' data-toggle='modal' ng-click="bootDialog({status:3, title:'申诉理由', detail:item.operateDetail})">申诉理由</button>
+                <button class="btn btn-success lBtn" ng-if="item.type === 23 && item.operateDetail" data-target='.refundModal' data-toggle='modal' ng-click="bootDialog({status:3, title:'拒绝理由', detail:item.operateDetail})">拒绝理由</button>
+                <button class="btn btn-success lBtn" ng-if="item.type === 25 && item.operateDetail" data-target='.refundModal' data-toggle='modal' ng-click="bootDialog({status:3, title:'拒绝理由', detail:item.operateDetail})">拒绝理由</button>
+                <div class="bar-1"></div>
+                <div class="bar-2">{{refundInfo.lengthOfLogs - $index}}</div>
+                <div class="bar-3"></div>
+            </dd>
+        </dl>
+
+    </div>
+</div>
+
+<!--dialog-->
+<div class="modal fade refundModal" >
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><b>{{dialog.title}}</b></h4>
+      </div>
+      <div class="modal-body">
+        <div class="dialog-content lh200 form-inline form-group">
+          <div>
+            <dl>
+                <dd ng-show="dialog.status === 0" class="js-pass">
+                    <span><i class="c-red">*</i> 退款金额：</span>
+                    <input type="text" class="form-control" style="width:130px;" placeholder="请输入退款金额" ng-required="true" ng-model="dialog.data.refundAmount" ng-pattern="pubRegex.price"  ng-blur="refundAmount = !dialog.data.refundAmount"  ng-class="{err:refundAmount || dialog.data.refundAmount > refundInfo.basicInfoVo.remainAccount}">
+                    <span>可退金额：<i class="c-red" ng-bind="refundInfo.basicInfoVo.remainAccount"></i></span>
+                </dd>
+                <dd ng-show="dialog.status === 0" class="js-pass">
+                    <span><i class="c-red">*</i> 退款方式：</span>
+                    <select class="form-control input-sm" ng-init="refundChannelList=[{id:1,value:'线上'},{id:2,value:'线下'}]"  ng-options="v.id as v.value for v in refundChannelList" ng-model="dialog.data.refundChannel" ng-required="true" ng-blur="refundChannel = !dialog.data.refundChannel" ng-class="{err:refundChannel}">
+                        <option value="">--订单类型--</option>
+                    </select>
+                </dd>
+                <dd ng-show="dialog.status === 0 && dialog.data.refundChannel === 2 " ng-class="{'js-pass': dialog.data.refundChannel === 2}" style="position:relative;">
+                    <span><i class="c-red">*</i> 退款凭证：</span>
+                    <div class="upimg-inline-block">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="refundCredences"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dialog.data.refundCredences" /></li>
+                        </ul>
+                    </div>
+                    <span style="width:200px; position:absolute; top:10px; left:220px;">线下退款需要上传退款凭证</span>
+                </dd>
+                <dd ng-show="dialog.status === 1" class="js-reject">
+                    <textarea class="form-control" ng-model="dialog.refundReason"  ng-maxlength="200" maxlength="200" rows="4" placeholder="请输入拒绝退款的理由，200字以内(必填)" ng-required="true" style="width:100%;" ng-blur="refundReason = !dialog.refundReason" ng-class="{err:refundReason}"></textarea>
+                    <span class="float-right">字数：{{dialog.refundReason | monitorWords}}/200</span>
+                </dd>
+                <dd ng-show="dialog.status === 2" class="js-transfer" style="position:relative;">
+                    <span><i class="c-red">*</i> 转账凭证：</span>
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li ><button type="button"  class="btn btn-info " id="transferVoucher"> 上传图片 <i></i> </button><div class="img-show-box"></div><input type="hidden"  ng-model="dialog.data.transferVoucher " /></li>
+                        </ul>
+                    </div>
+                    <span style="width:200px; position:absolute; top:10px; left:220px;">资金转账需要上传转账凭证</span>
+                </dd>
+                <dd ng-show="dialog.status === 3">
+                    <p ng-bind="dialog.detail"></p>
+                </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
+        <button type="button" class="btn btn-danger" ng-show="dialog.confirm" ng-click="dialogSubmit(dialog)">确定</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div ng-include="'/templates/partial/show-img.html'"></div>

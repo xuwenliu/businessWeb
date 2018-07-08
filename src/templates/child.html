@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>upload</title>
+    <link rel="stylesheet" type="text/css" href="../static/libs/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/base.css" />
+</head>
+<body>
+    <script src="../static/libs/jquery.min.js"></script>
+	<script>
+        var data = GetQueryString("data");
+        var status = GetQueryString("success");
+
+        if (status == "true") {
+            parent.document.querySelector(".krpano-hidden").value = data;
+            parent.window.successMsg.make({msg:"上传成功！"});
+            parent.document.querySelector(".loading").innerText="";
+            data = $.parseJSON(data);
+            parent.window.show720(data.path);
+        }
+        else {
+            parent.window.errorMsg.make({msg:"上传失败请重新上传"});
+        }
+
+        /**
+         * [GetQueryString 通过名字查询url参数]
+         * @param {[type]} name [description]
+         */
+        function GetQueryString(name) {
+             var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+             var r = window.location.search.substr(1).match(reg);
+             if(r!=null)return  unescape(r[2]); return null;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,344 @@
+
+<style>
+    .preview-img img{ border: 1px dotted #ccc; padding: 2px}
+    .imagesList { border-bottom:1px solid #eee; padding: 10px 20px; background: #fff}
+    .model-inline  span { width:140px !important;}
+    .content-box-model ul>li{ margin: 10px 0}
+    .brankListBox li>a{ display: inline-block; border: 4px solid #eee; padding: 4px; margin: 10px 20px 0 0 }
+    .leftr0 {margin-left: -4px !important;}
+</style>
+<div class="crumbs">
+    <h3>作品详情</h3>
+    <p><a ui-sref="main.case" >作品管理</a> > <a ui-sref="main.case" >作品列表</a> > 作品详情</p>
+</div>
+
+<div class="content-box " style="padding-left: 50px; min-width: 1100px">
+    <h4>基本资料</h4>
+    <div class="content-box-model mt10">
+        <ul class="model-inline lh220">
+            <li class="block"><span>作品名称：</span> <i class="f16 c-green">{{dataInfo.caseName }}</i></li>
+            <li><span>内容分类：</span>{{dataInfo.decorateTypeDesc }}</li>
+            <li><span>结果分类：</span>  <i ng-if="dataInfo.caseTypeCode==1">竣工作品</i> <i ng-if="dataInfo.caseTypeCode==2">设计作品</i> </li>
+            <li><span>设计风格：</span> {{dataInfo.caseStyleDesc  }}</li>
+        </ul>
+    </div>
+
+    <h4 class="mt30">房屋资料</h4>
+    <div class="content-box-model mt10">
+        <ul class="model-inline lh220">
+            <li><span>楼盘名称：</span> {{dataInfo.buildingName  }}</li>
+            <li><span>房型：</span>{{dataInfo.houseStyleDesc  }}</li>
+            <li><span>房屋面积：</span>  {{dataInfo.houseArea   }} (平方米)</li>
+            <li><span>所在城市：</span> {{dataInfo.levelDto.levelOneName}}--{{dataInfo.levelDto.levelTwoName }}<i ng-if="dataInfo.levelDto.levelThreeName">--{{dataInfo.levelDto.levelThreeName }}</i></li>
+
+        </ul>
+    </div>
+
+
+    <h4 class="mt30">团队资料</h4>
+    <div class="content-box-model mt10">
+        <ul class="model-inline lh220">
+            <li><span>商户名称：</span> {{dataInfo.companyName  }}</li>
+            <li ng-if="dataInfo.decorateTypeCode!==3"><span>设计师（硬装）：</span>{{getTeam(1)}}</li>
+            <li ng-if="dataInfo.decorateTypeCode!==2"><span>设计师（软装）：</span> {{getTeam(2)}} </li>
+            <li ng-if="dataInfo.decorateTypeCode!==1"><span>项目经理：</span> {{getTeam(3)}}</li>
+            <li><span>商务代表：</span>  {{getTeam(4)}}</li>
+        </ul>
+    </div>
+
+
+    <h4 class="mt30">作品资料</h4>
+    <div class="content-box-model mt10">
+        <ul class="model-inline lh220 form-inline form-group">
+            <li><span class="v-top">封面图：</span>
+                <a class="preview-img cursor "><img ng-src="{{dataInfo.caseCover }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{dataInfo.caseCover }}"></a></li>
+            <li class="block">
+                <span class="v-top">实景照片：</span>
+                <div ng-repeat=" k in dataInfo.decorateImages track by $index" class="imagesList inline-block  " style="width: 80% ;margin-left: 140px" ng-class="{leftr0:$index===0}" >
+                   <ul>
+                       <li>
+                           <a class="preview-img cursor float-left mr10 "><img ng-src="{{k.pics[0] }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{k.pics[0] }}"></a>
+                           <em>{{k.title}}</em>
+                           <p class="f12 c-999 lh180">{{k.explain }}</p>
+                       </li>
+                   </ul>
+                </div>
+            </li>
+            <li class="block" ng-if="dataInfo.pathOf720" ><span class="v-top">作品720：</span>
+                <a class="cursor  "  target="_blank" ng-href="{{getPathOf720()[0]}}"><img ng-src="{{getPathOf720()[1]}}" width="60"  ></a></li>
+            <li class="block"><span class="v-top">作品故事：</span>  {{dataInfo.caseStory }}</li>
+        </ul>
+    </div>
+
+
+
+    <h4 class="mt30">设计资料</h4>
+    <div class="content-box-model mt10">
+        <ul class="model-inline lh180 form-inline form-group">
+            <li class="block"  ng-if="dataInfo.decorateTypeCode!==3" >
+                <span class="v-top ">房型改造：</span>
+                <div ng-repeat=" m in dataInfo.designMaterials.houseImages track by $index" class="imagesList inline-block  " style="width: 80%; margin-left: 140px" ng-class="{leftr0:$index===0}" >
+                    <ul>
+                        <li>
+                            <a class="preview-img cursor float-left mr10 text-center "><img ng-src="{{m.originHouseImage.pics[0] }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{m.originHouseImage.pics[0]}}"><i class="f12 c-999 block">原始户型</i></a>
+                            <a class="preview-img cursor float-left mr10 text-center "><img ng-src="{{m.designHouseImage.pics[0] }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{m.designHouseImage.pics[0] }}"><i class="f12 c-999 block">设计平面</i></a>
+                            <em>{{m.originHouseImage.title}}</em>
+                            <p class="f12 c-999 lh180">{{m.originHouseImage.explain }}</p>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="block"  ng-if="dataInfo.decorateTypeCode!==3 && dataInfo.designMaterials.remakeIllustration"><span class="v-top">房屋改造说明：</span>
+
+                <div class="inline-block" style="width: 80%">
+                    {{dataInfo.designMaterials.remakeIllustration}}
+                </div>
+
+            </li>
+
+            <li class="block"  ng-if="dataInfo.decorateTypeCode!==3"><span>硬装设计费用：</span>  {{dataInfo.caseCost.designHard }} 元</li>
+
+            <hr style="border-top: 1px dashed #ddd"  ng-if="dataInfo.decorateTypeCode!==3">
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2">
+                <span class="v-top">软装陈列：</span>
+                <div ng-repeat=" n in dataInfo.designMaterials.displayImages track by $index" class="imagesList inline-block  " style="width: 80% ;margin-left: 140px" ng-class="{leftr0:$index===0}"  >
+                    <ul>
+                        <li>
+                            <a class="preview-img cursor float-left mr10 text-center "><img ng-src="{{n.pics[0] }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{n.pics[0]}}"></a>
+                            <em>{{n.title}}</em>
+                            <p class="f12 c-999 lh180">{{n.explain }}</p>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2 && dataInfo.designMaterials.displayIllustration"><span class="v-top">软装陈列说明：</span>
+                <div class="inline-block" style="width: 80%">
+                    {{dataInfo.designMaterials.displayIllustration}}
+                </div>
+            </li>
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2"><span>软装设计费用：</span>  {{dataInfo.caseCost.designSoft }}元</li>
+            <hr style="border-top: 1px dashed #ddd; " ng-if="dataInfo.decorateTypeCode!==2">
+            <li class="block" ng-if="desVideoShowUrl" ><span class="v-top">视频说明：</span>
+                <video ng-src="{{desVideoShowUrl}}" width="280" height="210" style="background: #000" controls></video>
+            </li>
+
+
+            <li class="block" ng-if="dataInfo.designConcept"><span>设计故事：</span>
+                <div class="inline-block" style="width: 80%">
+                    {{dataInfo.designConcept }}
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
+    <h4 class="mt30" ng-if="dataInfo.decorateTypeCode!==1">工程造价</h4>
+    <div class="content-box-model mt10" ng-if="dataInfo.decorateTypeCode!==1" >
+        <ul class="model-inline lh180 form-inline form-group">
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==3"><span >基础装修（合价）：</span>  {{dataInfo.caseCost.hardBasic  }} 元</li>
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==3"><span >建筑改造（合价）：</span>  {{dataInfo.caseCost.hardRemake  }} 元 </li>
+
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==3"><span >硬装主材（合价）：</span>  {{dataInfo.caseCost.hardMaterial }} 元</li>
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==3"><span class="v-top">硬装主材品牌：</span>
+                <div class="imagesList inline-block brankListBox " style="width: 80%" >
+                    <ul>
+                        <li>
+                            <a class="text-center"  ng-repeat=" h in  dataInfo.constructMaterials.mainMaterials">
+                                <img ng-src="{{h.logo}}" width="80" height="40" class="block">
+                                <i class=" f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <hr style="border-top: 1px dashed #ddd; " ng-if="dataInfo.decorateTypeCode!==3">
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==3"><span >设备设施（合价）：</span>  {{dataInfo.caseCost.hardEquip  }} 元 </li>
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==3"><span class="v-top">设备设施品牌：</span>
+                <div class="imagesList inline-block brankListBox " style="width: 80%" >
+                    <ul>
+                        <li>
+                            <a class="text-center"  ng-repeat=" h in  dataInfo.constructMaterials.equipMaterials">
+                                <img ng-src="{{h.logo}}" width="80" height="40" class="block">
+                                <i class=" f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <hr style = "border-top: 1px dashed #ddd;" ng-if="dataInfo.decorateTypeCode==4">
+
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2"><span >家具陈列（合价）：</span>  {{dataInfo.caseCost.furni  }} 元 </li>
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2"><span class="v-top">家具陈列品牌：</span>
+                <div class="imagesList inline-block brankListBox " style="width: 80%" >
+                    <ul>
+                        <li>
+                            <a class="text-center"  ng-repeat=" h in  dataInfo.constructMaterials.furniMaterials ">
+                                <img ng-src="{{h.logo}}" width="80" height="40" class="block">
+                                <i class=" f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <hr style="border-top: 1px dashed #ddd; " ng-if="dataInfo.decorateTypeCode!==2">
+
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2" ><span >家用电器（合价）：</span>  {{dataInfo.caseCost.electrical  }} 元 </li>
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2" ><span class="v-top">家用电器品牌：</span>
+                <div class="imagesList inline-block brankListBox " style="width: 80%" >
+                    <ul>
+                        <li>
+                            <a class="text-center"  ng-repeat=" h in  dataInfo.constructMaterials.electricalMaterials ">
+                                <img ng-src="{{h.logo}}" width="80" height="40" class="block">
+                                <i class=" f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <hr style="border-top: 1px dashed #ddd; " ng-if="dataInfo.decorateTypeCode!==2">
+
+
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2"><span >灯具饰品（合价）：</span>  {{dataInfo.caseCost.light  }} 元 </li>
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2"><span class="v-top">灯具饰品品牌：</span>
+                <div class="imagesList inline-block brankListBox " style="width: 80%" >
+                    <ul>
+                        <li>
+                            <a class="text-center"  ng-repeat=" h in  dataInfo.constructMaterials.lightMaterials ">
+                                <img ng-src="{{h.logo}}" width="80" height="40" class="block">
+                                <i class=" f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <hr style="border-top: 1px dashed #ddd; " ng-if="dataInfo.decorateTypeCode!==2">
+
+
+
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2"><span >墙纸布艺（合价）：</span>  {{dataInfo.caseCost.softPaper  }} 元 </li>
+            <li class="block" ng-if="dataInfo.decorateTypeCode!==2"><span class="v-top">墙纸布艺品牌：</span>
+                <div class="imagesList inline-block brankListBox " style="width: 80%" >
+                    <ul>
+                        <li>
+                            <a class="text-center"  ng-repeat=" h in  dataInfo.constructMaterials.paperMaterials ">
+                                <img ng-src="{{h.logo}}" width="80" height="40" class="block">
+                                <i class=" f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+
+
+
+        </ul>
+    </div>
+
+
+
+
+
+    <h4 class="mt30" ng-if="dataInfo.decorateTypeCode!==1" >施工资料</h4>
+    <div class="content-box-model mt10" ng-if="dataInfo.decorateTypeCode!==1">
+        <ul class="model-inline lh220 form-inline form-group">
+            <li class="block" ng-if="dataInfo.constructMaterials.hardChecks">
+                <span class="v-top inline-block pa">硬装验收阶段：</span>
+                <div ng-repeat=" e in dataInfo.constructMaterials.hardChecks" class="imagesList inline-block " style="width: 80%; margin-left: 140px; border-bottom: 1px solid #ccc" >
+                    <ul>
+                        <li>
+                            <em class="f16">{{e.phaseName}}</em>
+                            <p class="f12 c-999 lh180">{{e.phaseDescription }}</p>
+
+                            <b class="block mt10" style="margin-bottom: -6px">图片：</b>
+                            <div ng-repeat=" s in e.images" class="imagesList inline-block " style="width: 100%" >
+                                <ul>
+                                    <li>
+
+                                        <a class="preview-img cursor float-left mr10 text-center "><img ng-src="{{s.pics[0] }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{s.pics[0]}}"></a>
+                                        <em>{{s.title}}</em>
+                                        <p class="f12 c-999 lh180">{{s.explain }}</p>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+
+                            <b class="block mt10" style="margin-bottom: -6px">视频：</b>
+                            <div ng-repeat=" c in e.videos" class="imagesList inline-block " style="width: 100%" >
+                                <ul>
+                                    <li>
+                                        <a class="cursor float-left mr10 text-center preview-img"   data-target='.myModalVideo' ng-click="createVideoShow(c.url)"  data-toggle='modal' title="{{c.name}}"> <img ng-src="{{c.url}}?vframe/jpg/offset/{{c.second}}/w/90/h/60" alt="缩略图"></a>
+                                        <em>{{c.name}}</em>
+                                        <p class="f12 c-999 lh180">{{c.description }}</p>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+
+            <li class="block"  ng-if="dataInfo.constructMaterials.softChecks">
+                <span class="v-top inline-block pa">软装验收阶段：</span>
+                <div ng-repeat=" e in dataInfo.constructMaterials.softChecks" class="imagesList inline-block " style="width: 80%; margin-left: 140px; border-bottom: 1px solid #ccc" >
+                    <ul>
+                        <li>
+                            <em class="f16">{{e.phaseName}}</em>
+                            <p class="f12 c-999 lh180">{{e.phaseDescription }}</p>
+
+                            <b class="block mt10" style="margin-bottom: -10px">图片：</b>
+                            <div ng-repeat=" s in e.images" class="imagesList inline-block " style="width: 100%" >
+                                <ul>
+                                    <li>
+
+                                        <a class="preview-img cursor float-left mr10 text-center "><img ng-src="{{s.pics[0] }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{s.pics[0]}}"></a>
+                                        <em>{{s.title}}</em>
+                                        <p class="f12 c-999 lh180">{{s.explain }}</p>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+
+                            <b class="block mt10" style="margin-bottom: -10px">视频：</b>
+                            <div ng-repeat=" c in e.videos" class="imagesList inline-block " style="width: 100%" >
+                                <ul>
+                                    <li>
+                                        <a class="cursor float-left mr10 text-center "   data-target='.myModalVideo' ng-click="createVideoShow(c.url)"  data-toggle='modal' title="{{c.name}}"> <img ng-src="{{c.url}}?vframe/jpg/offset/{{c.second}}/w/90/h/60" alt="缩略图"></a>
+                                        <em>{{c.name}}</em>
+                                        <p class="f12 c-999 lh180">{{c.description }}</p>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+</div>
+<div ng-include="'/templates/partial/show-img.html'"></div>
+<div ng-include="'/templates/partial/show-video.html'"></div>

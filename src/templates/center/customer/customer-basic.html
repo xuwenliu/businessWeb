@@ -1,0 +1,11 @@
+<!--基础信息-->
+<h4>基础信息</h4>
+<div class="content-box-model mt10">
+    <ul class="model-inline lh220">
+        <li><span>客户手机：</span> {{cinfo.userPhone}}</li>
+        <li><span>客户昵称：</span> {{cinfo.nickName}}</li>
+        <li><span>客户头像：</span> <a class="preview-img cursor "><img ng-src="{{cinfo.headImage }}&imageView2/1/w/60/h/60" width="60"  data-target=".myModal" data-toggle="modal"  data-img="{{cinfo.headImage }}"></a></li>
+        <li><span>注册时间：</span> {{cinfo.createTime | date:'yyyy-MM-dd HH:mm:ss' }}</li>
+    </ul>
+</div>
+<!--基础信息-->

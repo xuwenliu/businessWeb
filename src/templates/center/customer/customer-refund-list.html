@@ -1,0 +1,58 @@
+
+<div>
+  <div class="form-inline form-group searchs"  >
+    <h4 class="inline-block mr50" >退款信息</h4>
+    <i class=" c-999">筛选：</i>
+    <!--<select class="form-control input-sm " ng-init="orderTypeContent=[{id:-1,value:'全部'},{id:1,value:'设计订单'},{id:2,value:'装修订单'},{id:3,value:'配饰订单'}]" ng-options="v.id as v.value for v in orderTypeContent" ng-model="list.contentType"   >-->
+      <!--<option value="">&#45;&#45;订单内容&#45;&#45;</option>-->
+    <!--</select>-->
+
+    <select class="form-control input-sm "   ng-options="v.code as v.desc for v in allStatusTypes.refundStatusTypes" ng-model="list.refundStatus"   >
+      <option value="">--退款状态--</option>
+    </select>
+
+    <div class="inline-block f12 float-right"><span>下单时间：</span>
+      <div class="input-append date form_datetime_start inline-block" >
+        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+        <input class=" form-control input-sm" size="16" placeholder="起始时间" type="text" onkeyup="this.value=''" id="beginTime" >
+      </div> ----
+      <div class="input-append date form_datetime_end inline-block" >
+        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+        <input class=" form-control input-sm" size="16" type="text"  placeholder="结束时间" onkeyup="this.value=''" id="endTime">
+      </div>
+      <input type="hidden" ng-class="{err:!dateThan==''}">
+      <i class="f12 c-red" >{{dateThan}}</i>
+      <input type="text" class="form-control input-sm"  placeholder="订单编号" maxlength="30" size="30" ng-model="list.orderNum">
+      <button   type="button" class="btn btn-primary btn-sm  input-sm " ng-click="submitSearch(list)">  <i class="iconfont f12 no-b ">&#xe644;</i>查询</button>
+    </div>
+
+  </div>
+
+  <table class=" table   table-hover  table-bordered table-striped text-center ">
+    <thead >
+    <tr>
+      <td>退款编号</td>
+      <td>订单号</td>
+      <td>退款金额</td>
+      <td>退款状态</td>
+      <td>下单时间</td>
+      <td>操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result">
+      <td ng-bind="g.id"></td>
+      <td ng-bind="g.orderNum "></td>
+      <td ng-bind="g.refundAmount "></td>
+      <td>{{g.statusDesc}}</td>
+      <td> {{g.createTime |date:'yyyy-MM-dd HH:mm:ss'  }}</td>
+      <td>
+        <button  class="btn btn-success btn-xs "  ng-click=show(g.id)>查看</button>
+      </td>
+    </tr>
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="9" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>
+

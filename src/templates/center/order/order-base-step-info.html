@@ -1,0 +1,73 @@
+
+<h4>基本信息</h4>
+<div class="content-box-model mt10">
+   <ul class="model-inline lh220">
+       <li><span>订单编号：</span> {{dataI.orderBasicVo.orderNum }}</li>
+       <li><span>订单内容：</span> {{dataI.orderBasicVo.contentType }}</li>
+       <li><span>订单状态：</span>  {{dataI.orderBasicVo.orderStatus  }}</li>
+       <li><span>订单总金额：</span> <i class="c-red f18" >￥ {{dataI.orderBasicVo.totalAmount  }}</i> 元</li>
+       <!--<li><span>作品：</span>  {{dataI.orderBasicVo.caseName }}</li>-->
+       <li><span>聊天：</span>  {{dataI.orderBasicVo.chatName  }}</li>
+       <li><span>下单时间：</span>  {{dataI.orderBasicVo.orderCreateTime |date:'yyyy-MM-dd HH:mm:ss'   }}</li>
+   </ul>
+</div>
+
+<h4 class="mt20">房屋信息</h4>
+<div class="content-box-model mt10">
+    <ul class="model-inline lh220">
+        <li><span>小区名称：</span> {{dataI.houseInfoVo.areaName}}</li>
+        <li><span>是否新房：</span> {{dataI.houseInfoVo.houseCondition}}</li>
+        <li><span>户型：</span> {{dataI.houseInfoVo.houseLayout}}</li>
+        <li><span>房屋面积：</span>{{dataI.houseInfoVo.houseArea   }}</li>
+        <li><span>房屋预算：</span> {{dataI.houseInfoVo.houseBudget   }}</li>
+        <li><span>房屋地址：</span> {{dataI.houseInfoVo.houseAddress  }}</li>
+    </ul>
+</div>
+
+<h4 class="mt20">联系信息</h4>
+<div class="content-box-model mt10">
+    <ul class="model-inline f16 c-green"><li>业主信息</li></ul>
+    <ul class="model-inline lh220 mt10">
+        <li><span>业主昵称：</span> {{dataI.customerVo.nickName}}</li>
+        <li><span>联系电话：</span> {{dataI.customerVo.phone}}</li>
+    </ul>
+    <hr style="border-top: 1px dashed #ccc">
+    <ul class="model-inline f16 c-green" ><li>商家处理信息</li></ul>
+    <ul class="model-inline form-inline lh320 mt10">
+
+        <li><span>主创设计：</span>
+            <select class="form-control" ng-options="v.userId as v.name for v in designTeam" ng-model="dataInfo.designerId " >
+                <option value="">--主创设计选择--</option>
+            </select>
+        </li>
+        <li><span>商务代表：</span>
+            <select class="form-control" ng-options="v.userId as v.name for v in advisorTeam" ng-model="dataInfo.homeAdvisorId" >
+                <option value="">--商务代表选择--</option>
+            </select>
+        </li>
+
+        <li><span>项目经理：</span>
+            <select class="form-control" ng-options="v.userId as v.name for v in pmTeam" ng-model="dataInfo.projectManagerId" >
+                <option value="">--项目经理选择--</option>
+            </select>
+        </li>
+
+        <li class="block"><span>合同照片：</span>
+            <div class="upimg-inline-block " style="width: 80%">
+                <ul>
+                    <li ><button type="button"  class="btn btn-info " id="contractPhotos"> 上传合同照片 <i></i> </button>
+                        <div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.contractPhotos " /></li>
+                </ul>
+            </div>
+            <!---->
+        </li>
+
+        <li class="block" ng-show="dataI.orderBasicVo.canModify"  >
+            <span style="visibility: hidden">提交数据：</span>
+            <button ng-click="submit([dataInfo,true])"  type="button" class="btn btn-primary mr50 ">提交</button>
+
+        </li>
+    </ul>
+</div>
+
+<div ng-include="'/templates/partial/show-img.html'"></div>

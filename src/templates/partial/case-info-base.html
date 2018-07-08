@@ -1,0 +1,34 @@
+<style>
+    .caseTabBtn .btn-primary i{color:#666}
+   .caseTabBtn .btn-primary i{color:#fff; opacity: 0.6}
+</style>
+<!--作品基础信息-->
+<div class="form-inline form-group lh32" ng-controller="CaseInfoControllerbase">
+    <dl>
+        <dd>
+            <p class=" model-title  ">作品基本信息</p>
+            <p><span>作品名称：</span>{{data.basic.caseName}}</p>
+            <p><span>作品编号：</span>{{data.basic.caseSerialNum}}</p>
+            <p><span>作品地址：</span>{{data.basic.buildingAddress}}</p>
+            <p><span>房屋面积：</span>{{data.basic.houseArea}}</p>
+            <p><span>房型选择：</span>{{data.basic.houseTypeStr}}</p>
+            <p><span>造价选择：</span>{{data.basic.costRangeStr}}</p>
+            <p><span>作品类型：</span>{{data.basic.decorateTypeStr}}</p>
+            <p><span  style="vertical-align: top" >作品封面图：</span><a class="preview-img " >
+                <img ng-src="{{data.basic.caseCover}}&imageView2/1/w/100/h/100" width="100" data-img="{{data.basic.caseCover}}"></a>
+            </p>
+            <p><span>作品720欣赏：</span> <i ng-if="data.basic.pathOf720">已上传</i><i ng-if="!data.basic.pathOf720">未上传</i></p>
+
+        </dd>
+    </dl>
+    <p class=" model-title  pt20 "></p>
+
+    <dl class="ml20 caseTabBtn">
+        <dd>
+            <button type="button" ng-show="data.hasDesignPart" class="btn btn-primary btn-sm pl10 pr10" ng-click="edit(['case-add-p1'])" > 设计内容 <i ng-if="data.designPartSubmitted" class="f12" >(已提交)</i></button>
+            <button type="button" ng-show="data.hasDecoPart" class="btn  btn-sm ml20 pl10 pr10" ng-click="edit(['case-add-p2'])"> 装修内容 <i ng-if="data.decoPartSubmitted" class="f12" >(已提交)</i></button>
+            <button type="button" ng-show="data.hasOrnaPart" class="btn  btn-sm ml20 pl10 pr10" ng-click="edit(['case-add-p3'])"> 配饰内容 <i ng-if="data.ornaPartSubmitted" class="f12" >(已提交)</i></button>
+            <button type="button" ng-show="data.hasGardenPart" class="btn  btn-sm ml20 pl10 pr10" ng-click="edit(['case-add-p4'])"> 园林内容 <i ng-if="data.gardernPartSubmitted" class="f12" >(已提交)</i></button>
+        </dd>
+    </dl>
+</div>

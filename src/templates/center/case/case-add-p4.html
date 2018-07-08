@@ -1,0 +1,564 @@
+
+<style>
+    .input-table-default td>span{ width: 140px !important; }
+    .brankListBox li>a,.brankDialogListBox p{ display: inline-block; border: 4px solid #eee; padding: 4px; margin: 10px 20px 0 0 }
+    .brankDialogListBox p{ background: #fff; padding: 6px;  position: relative; cursor: pointer}
+    .brankDialogListBox p img{ background: #fff;padding: 6px}
+    .brankDialogListBox p.hover:after{content:'√'; line-height: 250%; font-size: 20px; background:rgba(0,0,0,0.6); color:#94FF7C;  position: absolute; left:0; right: 0; bottom: 0; top:0}
+
+    .create-dialog-list ul li{ border: none; background: #fff}
+    .create-dialog-list ul li.inline-block{ background: none}
+
+
+
+</style>
+<div class="crumbs">
+    <h3>作品编辑 </h3><em class="c-666 ml10"></em>
+    <p><a ui-sref="main.case" >作品管理</a> > <a ui-sref="main.case" >作品列表</a> > 作品编辑</p>
+</div>
+
+<div class="content-box " ng-if="decorateTypesCode!==1">
+    <p class=" model-title mt50 block  ">工程造价</p>
+    <div class="form-inline form-group">
+        <table class="input-table-default">
+            <tr ng-if="decorateTypesCode!==3">
+                <td class="v-top"><span>基础装修（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.hardBasic"  ng-blur="hardBasic = !dataInfo.hardBasic" ng-pattern="pubRegex.price"  ng-class="{err:hardBasic}" />
+                </td>
+            </tr>
+
+            <tr ng-if="decorateTypesCode!==3">
+                <td class="v-top"><span>建筑改造（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.hardRemake "  ng-blur="hardRemake  = !dataInfo.hardRemake " ng-pattern="pubRegex.price"  ng-class="{err:hardRemake }" />
+                </td>
+            </tr>
+
+            <tr ng-if="decorateTypesCode!==3">
+                <td class="v-top"><span>硬装主材（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.hardMaterial"  ng-blur="hardMaterial = !dataInfo.hardMaterial" ng-pattern="pubRegex.price"  ng-class="{err:hardMaterial}" />
+
+                    <div class="brankListBox">
+                        <ul>
+                            <li>
+                                <a class="text-center"  ng-repeat=" h in  dataInfo.materialDto.mainMaterials">
+                                    <img ng-src="{{h.logo}}" width="80" height="40" class="block">
+                                    <i class=" f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                                </a>
+                            </li>
+
+                            <li class="mt10"><button type="button" class="btn btn-info block "  ng-click="createDrandDialog({bigClassId:1,lastData:dataInfo.materialDto.mainMaterials,str:'mainMaterials',oldData:oldmainMaterials})" > 设置品牌</button></li>
+                        </ul>
+                    </div>
+
+                </td>
+            </tr>
+
+            <tr ng-if="decorateTypesCode!==3" >
+                <td class="v-top"><span>设备设施（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.hardEquip"  ng-blur="hardEquip = !dataInfo.hardEquip" ng-pattern="pubRegex.price"  ng-class="{err:hardEquip}" />
+
+                    <div class="brankListBox">
+                        <ul>
+                            <li>
+                                <a class="text-center"  ng-repeat=" h in  dataInfo.materialDto.equipMaterials">
+                                    <img ng-src="{{h.logo}}" width="80" height="40">
+                                    <i class="block f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                                </a>
+                            </li>
+
+                            <li class="mt10"><button type="button" class="btn btn-info block "  ng-click="createDrandDialog({bigClassId:6,lastData:dataInfo.materialDto.equipMaterials,str:'equipMaterials',oldData:oldequipMaterials})"  > 设置品牌</button></li>
+                        </ul>
+                    </div>
+
+
+                </td>
+
+            </tr>
+
+
+            <tr ng-if="decorateTypesCode!==2">
+                <td class="v-top"><span>家具陈列（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.furni"  ng-blur="furni = validateFun(dataInfo.furni)"  ng-class="{err:furni}" /><i class=" f12 c-999 ml10">(选填)</i>
+
+                    <div class="brankListBox">
+                        <ul>
+                            <li>
+                                <a class="text-center"  ng-repeat=" h in  dataInfo.materialDto.furniMaterials">
+                                    <img ng-src="{{h.logo}}" width="80" height="40">
+                                    <i class="block f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                                </a>
+                            </li>
+
+                            <li class="mt10"><button type="button" class="btn btn-info block "  ng-click="createDrandDialog({bigClassId:3,lastData:dataInfo.materialDto.furniMaterials,str:'furniMaterials',oldData:oldfurniMaterials})"  > 设置品牌</button></li>
+                        </ul>
+                    </div>
+
+                </td>
+            </tr>
+
+            <tr ng-if="decorateTypesCode!==2">
+                <td class="v-top"><span>家用电器（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.electrical"  ng-blur="electrical = validateFun(dataInfo.electrical)"  ng-class="{err:electrical}" /> <i class=" f12 c-999 ml10">(选填)</i>
+
+                    <div class="brankListBox">
+                        <ul>
+                            <li>
+                                <a class="text-center"  ng-repeat=" h in  dataInfo.materialDto.electricalMaterials">
+                                    <img ng-src="{{h.logo}}" width="80" height="40">
+                                    <i class="block f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                                </a>
+                            </li>
+
+                            <li class="mt10"><button type="button" class="btn btn-info block "  ng-click="createDrandDialog({bigClassId:5,lastData:dataInfo.materialDto.electricalMaterials,str:'electricalMaterials',oldData:oldelectricalMaterials})"  > 设置品牌</button></li>
+                        </ul>
+                    </div>
+
+
+                </td>
+            </tr>
+
+            <tr ng-if="decorateTypesCode!==2">
+                <td class="v-top"><span>灯具饰品（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.light"  ng-blur="light = validateFun(dataInfo.light)"  ng-class="{err:light}" /> <i class=" f12 c-999 ml10">(选填)</i>
+
+                    <div class="brankListBox">
+                        <ul>
+                            <li>
+                                <a class="text-center"  ng-repeat=" h in  dataInfo.materialDto.lightMaterials">
+                                    <img ng-src="{{h.logo}}" width="80" height="40">
+                                    <i class="block f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                                </a>
+                            </li>
+
+                            <li class="mt10"><button type="button" class="btn btn-info block "  ng-click="createDrandDialog({bigClassId:4,lastData:dataInfo.materialDto.lightMaterials,str:'lightMaterials',oldData:oldlightMaterials})"  > 设置品牌</button></li>
+                        </ul>
+                    </div>
+
+
+                </td>
+            </tr>
+
+
+            <tr ng-if="decorateTypesCode!==2">
+                <td class="v-top"><span>墙纸布艺（合价）：</span></td>
+                <td>
+                    <input type="text" class="form-control " size="10" ng-minlength="0"  maxlength="8" placeholder="￥0.00" ng-model="dataInfo.softPaper "  ng-blur="softPaper  == validateFun(dataInfo.softPaper)"  ng-class="{err:softPaper }" /> <i class=" f12 c-999 ml10">(选填)</i>
+
+
+                    <div class="brankListBox">
+                        <ul>
+                            <li>
+                                <a class="text-center"  ng-repeat=" h in  dataInfo.materialDto.paperMaterials track by $index">
+                                    <img ng-src="{{h.logo}}" width="80" height="40">
+                                    <i class="block f12 " >{{h.name}}</i><i class="f12 c-999"> ({{h.brandClasses[0].subTypeName}})</i>
+                                </a>
+                            </li>
+
+                            <li class="mt10"><button type="button" class="btn btn-info block "  ng-click="createDrandDialog({bigClassId:2,lastData:dataInfo.materialDto.paperMaterials,str:'paperMaterials',oldData:oldpaperMaterials})"  > 设置品牌</button></li>
+                        </ul>
+                    </div>
+
+
+
+                </td>
+            </tr>
+
+            <tr>
+                <td><span></span></td>
+                <td>
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    <p class=" model-title mt50 block  ">施工资料</p>
+    <div class="form-inline form-group">
+        <table class="input-table-default">
+            <!--硬装施工-->
+            <tr ng-if="decorateTypesCode!==3">
+                <td class="v-top"><span>硬装施工：</span></td>
+                <td>
+                    <!---->
+                    <div>
+                        <ul>
+                            <li class="inline-block"><button type="button" class="btn btn-info " ng-init="initCreatePhoto_sj={maxLen:9,minLen:0}"   ng-click="createCommonDialog({lastData:dataInfo.materialDto.hardChecks,addData:{},maxLen:initCreatePhoto_sj.maxLen,isScene:true})"  > 添加硬装验收节点</button>
+                                <i class="f12 c-999 ml10">(选填，硬装施工过程中所有验收节点和资料，不超过9项)</i>
+                                <input class="form-control creatPicslen " type="hidden" ng-blur="creatPicslen=dataInfo.materialDto.hardChecks.length<initCreatePhoto_sj.minLen"  ng-class="{err:creatPicslen }"/>
+                                <i class="f12 c-red  block"  ng-if="creatPicslen">至少一个硬装验收阶段！</i>
+                            </li>
+                        </ul>
+                        <ul class="create-dialog-list inline-block mt10 " style="width: 90%" ng-if="dataInfo.materialDto.hardChecks.length">
+                            <li  ng-model="dataInfo.materialDto.hardChecks" ng-repeat="g in dataInfo.materialDto.hardChecks track by $index" class="f12 lh260"  >
+
+
+                                <b class="ml10 ">{{g.phaseName}}</b>
+
+                                <span class="float-right c-999 mr10" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createCommonDialog({lastData:dataInfo.materialDto.hardChecks,addData:g,index:$index,isScene:true})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createCommonDel([dataInfo.materialDto.hardChecks,g])">移除</a></span>
+
+                                <!---->
+
+                                <div>
+                                    <ul>
+                                        <li class="inline-block"><button type="button" class="btn btn-info btn-xs" ng-init="initCreatePhoto_sj={maxLen:15,minLen:0}"   ng-click="createPhotoDialog({lastData:g.images,addData:{},maxLen:initCreatePhoto_sj.maxLen})"  > 添加图片</button>
+                                            <i class="f12 c-999 ml10">(选填)</i>
+                                            <input class="form-control creatPicslen " type="hidden" ng-blur="creatPicslen1=g.images.length<initCreatePhoto_sj.minLen"  ng-class="{err:creatPicslen1 }"/>
+                                            <i class="f12 c-red  block"  ng-if="creatPicslen1">至少上传一组图片！</i>
+                                        </li>
+                                    </ul>
+                                    <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="g.images.length">
+                                        <li  ng-model="g.images" ng-repeat="j in g.images track by $index" class="f12 lh260" >
+
+                                            <a class="cursor" style="width:70%;" class="inline-block" data-target='.myModal' ng-click="createPhotoShow(j.pics[0])"  data-toggle='modal' title="{{j.title}}"><img ng-src="{{j.pics[0]}}&imageView2/1/w/30/h/30" alt="缩略图" /><em class="ml10">{{j.title}}</em></a>
+
+                                            <span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createPhotoDialog({lastData:g.images,addData:j,index:$index,isScene:true})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createPhotoDel([g.images,j])">移除</a></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!---->
+
+
+
+
+                                <!--video-->
+                                <div>
+                                    <ul>
+                                        <li class="inline-block">
+                                            <button type="button" class="btn btn-info btn-xs " ng-init="initCreateV={maxLen:5,minLen:0}"   ng-click="createVideoDialog( {lastData:g.videos,addData:{},maxLen:initCreateV.maxLen})"  > 添加视频</button>
+                                            <i class="f12 c-999 ml10">(选填)</i></li>
+                                        <input class="form-control creatVlen " type="hidden" ng-blur="creatVlen=g.videos.length<initCreateV.minLen"  ng-class="{err:creatVlen }"/>
+                                        <i class="f12 c-red  block"  ng-if="creatVlen">请上传一个视频！</i>
+                                    </ul>
+                                    <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="g.videos.length">
+                                        <li  ng-model="g.videos" ng-repeat="k in g.videos track by $index" class="f12 lh260" >
+                                            <i class="iconfont"></i>
+                                            <a class="cursor"   data-target='.myModalVideo' ng-click="createVideoShow(k.url)"  data-toggle='modal' title="{{k.name}}">
+                                                <img ng-src="{{k.url}}?vframe/jpg/offset/{{k.second}}/w/50/h/30" alt="缩略图"><em class="ml10">{{k.name}}</em> <i class="c-999"> 时长:{{k.duration | number:2}} s</i>
+                                            </a>
+                            <span class="float-right c-999">
+                            <i class="iconfont f12">&#xe616;</i>
+                            <a href="javascript:void(0)"  data-target='.upVideoDialog'   data-toggle='modal' ng-click="createVideoDialog( {lastData:g.videos,addData:k,index:$index})" >编辑</a>
+                            <i class="iconfont f12">&#xe615;</i>
+                            <a  href="javascript:void(0)" ng-click="createVideoDel([g.videos,k])">移除</a>
+                            </span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <!---->
+
+                            </li>
+                        </ul>
+                    </div>
+                    <!---->
+
+
+                </td>
+            </tr>
+
+
+
+            <!--软装施工-->
+            <tr ng-if="decorateTypesCode!==2">
+                <td class="v-top"><span>软装施工：</span></td>
+                <td>
+                    <!---->
+                    <div>
+                        <ul>
+                            <li class="inline-block"><button type="button" class="btn btn-info " ng-init="initCreatePhoto_sj={maxLen:9,minLen:0}"   ng-click="createCommonDialog({lastData:dataInfo.materialDto.softChecks,addData:{},maxLen:initCreatePhoto_sj.maxLen})"  > 添加软装验收节点</button>
+                                <i class="f12 c-999 ml10">(选填，软装施工过程中所有验收节点和资料，不超过9项)</i>
+                                <input class="form-control creatPicslen " type="hidden" ng-blur="creatPicslen2=dataInfo.materialDto.softChecks.length<initCreatePhoto_sj.minLen"  ng-class="{err:creatPicslen2 }"/>
+                                <i class="f12 c-red  block"  ng-if="creatPicslen2">>至少一个软装验收阶段！！</i>
+                            </li>
+                        </ul>
+                        <ul class="create-dialog-list inline-block mt10 " style="width: 90%" ng-if="dataInfo.materialDto.softChecks.length">
+                            <li  ng-model="dataInfo.materialDto.softChecks" ng-repeat="m in dataInfo.materialDto.softChecks track by $index" class="f12 lh260"  style="padding-bottom: 30px" >
+
+
+                                <b class="ml10 ">{{m.phaseName}}</b>
+
+                                <span class="float-right c-999 mr10" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createCommonDialog({lastData:dataInfo.materialDto.softChecks,addData:m,index:$index,isScene:true})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createCommonDel([dataInfo.materialDto.softChecks,m])">移除</a></span>
+
+                                <!---->
+
+                                <div>
+                                    <ul>
+                                        <li class="inline-block"><button type="button" class="btn btn-info btn-xs" ng-init="initCreatePhoto_sj={maxLen:15,minLen:0}"   ng-click="createPhotoDialog({lastData:m.images,addData:{},maxLen:initCreatePhoto_sj.maxLen,isScene:true})"  > 添加图片</button>
+                                            <i class="f12 c-999 ml10">(选填)</i>
+                                            <input class="form-control creatPicslen " type="hidden" ng-blur="creatPicslen3=m.images.length<initCreatePhoto_sj.minLen"  ng-class="{err:creatPicslen3 }"/>
+                                            <i class="f12 c-red  block"  ng-if="creatPicslen3">至少上传一组图片！</i>
+                                        </li>
+                                    </ul>
+                                    <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="m.images.length">
+                                        <li  ng-model="m.images" ng-repeat="n in m.images track by $index" class="f12 lh260" >
+
+                                            <a class="cursor" style="width:70%;" class="inline-block" data-target='.myModal' ng-click="createPhotoShow(n.pics[0])"  data-toggle='modal' title="{{n.title}}"><img ng-src="{{n.pics[0]}}&imageView2/1/w/30/h/30" alt="缩略图" /><em class="ml10">{{n.title}}</em></a>
+
+                                            <span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createPhotoDialog({lastData:m.images,addData:n,index:$index,isScene:true})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createPhotoDel([m.images,n])">移除</a></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!---->
+
+
+
+
+                                <!--video-->
+                                <div>
+                                    <ul>
+                                        <li class="inline-block">
+                                            <button type="button" class="btn btn-info btn-xs " ng-init="initCreateV={maxLen:5,minLen:0}"   ng-click="createVideoDialog( {lastData:m.videos,addData:{},maxLen:initCreateV.maxLen})"  > 添加视频</button>
+                                            <i class="f12 c-999 ml10">(选填)</i></li>
+                                        <input class="form-control creatVlen " type="hidden" ng-blur="creatVlen2=m.videos.length<initCreateV.minLen"  ng-class="{err:creatVlen2 }"/>
+                                        <i class="f12 c-red  block"  ng-if="creatVlen2">请上传一个视频！</i>
+                                    </ul>
+                                    <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="m.videos.length">
+                                        <li  ng-model="m.videos" ng-repeat="p in m.videos track by $index" class="f12 lh260" >
+                                            <i class="iconfont"></i>
+                                            <a class="cursor"   data-target='.myModalVideo' ng-click="createVideoShow(p.url)"  data-toggle='modal' title="{{p.name}}">
+                                                <img ng-src="{{p.url}}?vframe/jpg/offset/{{p.second}}/w/50/h/30" alt="缩略图"><em class="ml10">{{p.name}}</em> <i class="c-999"> 时长:{{p.duration | number:2}} s</i>
+                                            </a>
+                            <span class="float-right c-999">
+                            <i class="iconfont f12">&#xe616;</i>
+                            <a href="javascript:void(0)"  data-target='.upVideoDialog'   data-toggle='modal' ng-click="createVideoDialog( {lastData:m.videos,addData:p,index:$index})" >编辑</a>
+                            <i class="iconfont f12">&#xe615;</i>
+                            <a  href="javascript:void(0)" ng-click="createVideoDel([m.videos,p])">移除</a>
+                            </span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <!---->
+
+                            </li>
+                        </ul>
+                    </div>
+                    <!---->
+
+
+                </td>
+            </tr>
+
+            <tr>
+                <td><span></span></td>
+                <td>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td><span></span></td>
+                <td>
+                    <button ng-click="submit([dataInfo,true])"  type="button" class="btn btn-primary " >提交</button>
+                    <div class="inline-block ml20"  ng-if="e">
+
+                        <i class="f12 c-999">选择步骤：</i> <select  ng-init="jumpStep.decorateType=4"   class="form-control" ng-options="v.code as v.name disable when v.isdisabled for v in stepList" ng-model="jumpStep.decorateType"  ng-change="submit([dataInfo,true, jumpStep.decorateType])" >
+                        <option value="">--跳转到步骤--</option>
+                    </select>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<!--dialog上传验收阶段模块-->
+<div class="modal fade upCommonDialog  create-dialog-box">
+    <div class="modal-dialog " style="width: 700px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ng-if="createPhotoTitleAdd">添加验收节点</h4>
+                <h4 class="modal-title" ng-if="!createPhotoTitleAdd">编辑验收节点</h4>
+            </div>
+            <div class="modal-body" ng-show="maxlengtherr">
+                <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+            </div>
+            <div class="modal-body"  ng-show="!maxlengtherr" >
+                <div class="dialog-content ml20 " >
+                    <dl class="  form-inline form-group" >
+                        <dd ><span>阶段名称：</span><input  class="form-control "     type="text"  ng-model="createPhotoInfo.phaseName" maxlength="30"  placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber"  autocomplete="off"></dd>
+
+                        <dd><span>阶段描述：</span><textarea class="form-control " ng-model="createPhotoInfo.phaseDescription"    rows="6" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea>
+                            <br><span></span><i>{{createPhotoInfo.phaseDescription | monitorWords}}/500</i></dd>
+                        <p class="text-center c-red f12 "><em ng-bind="createPhotoInfo.errorMsg"></em></p>
+                    </dl>
+
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-primary "  ng-click="createCommonSumbit(createPhotoInfo)" >确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+<!--dialog选择品牌模块-->
+<div class="modal fade getBrandDialog  create-dialog-box">
+    <div class="modal-dialog " style="width: 80%; min-width: 980px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">品牌选择</h4>
+            </div>
+
+            <div class="modal-body" style="overflow:auto; height: 600px" >
+                <div class="dialog-content ml20  ">
+                    <ul style="background:#eee;padding: 10px">
+                        <div class="form-inline form-group "  style="width: 50%; margin: 0 auto" >
+                            <input type="search" class="form-control input-sm"  placeholder="请输入品牌名称" size="10"  maxlength="30"  ng-model="queryKey">
+                            <button type="button" class="btn btn-primary btn-sm  input-sm" ng-click="submitSearch(queryKey)"> <i class="iconfont f12 no-b ">&#xe644;</i>查询</button>
+                        </div>
+                    </ul>
+                    <ul style="background:#f8f8f8;padding: 10px; border:1px solid #eee">
+                        已选择：  <a class="text-center inline-block mr20"   ng-repeat=" v in  dialogbrandsLastData track by $index" on-brands-finished>
+                            <i class="block-in f12 "  >{{v.name}}</i><i class="f12 c-999"> ({{v.brandClasses[0].subTypeName}})</i><i ng-click="delDialogbrandsLastData([dialogbrandsLastData,v,bigClassId,v.brandClasses[0].subType,v.id])" class="cursor ml5 inline-block f12 red" style="padding:0px 4px; color: #ff0000"  data-ids="{{bigClassId}}|{{v.brandClasses[0].subType}}|{{v.id}}" >x</i>
+                        </a>
+
+                    </ul>
+                    <ul class="  form-inline form-group brankDialogListBox" >
+                        <li ng-repeat=" j in getBrandByBigClassId" on-brands-finished>
+                            <span class="mt30 ">{{j.name}}：</span>
+                            <div class="inline-block" style="width:88%;" >
+                                <div ng-repeat="k in j.brands track by $index" class=" inline-block text-center f12">
+                                <label>
+                                    <p data-id="{{bigClassId}}|{{j.id}}|{{k.id}}" data-name="{{k.name}}({{j.name}})" ng-click="resetData()">
+                                        <img ng-src="{{k.logo}}&imageView2/1/w/80/h/30" width="80"  height="30" >
+                                        <i class="block">{{k.name}}</i>
+                                    </p>
+                                </label>
+                            </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-success ml50 "  ng-click="createBrandsSumbit(getBrandByBigClassIdDefault,1)" >完成并关闭窗口</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+<!--dialog上传图文模块-->
+<div class="modal fade upPhotoDialog  create-dialog-box">
+    <div class="modal-dialog " style="width: 700px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ng-if="createPhotoTitleAdd">添加图片</h4>
+                <h4 class="modal-title" ng-if="!createPhotoTitleAdd">编辑图片</h4>
+            </div>
+            <div class="modal-body" ng-show="maxlengtherr">
+                <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+            </div>
+            <div class="modal-body"  ng-show="!maxlengtherr" >
+                <div class="dialog-content ml20 " >
+                    <dl class="  form-inline form-group" >
+                        <dd ><span>图片名称：</span><input  class="form-control "     type="text"  ng-model="createPhotoInfo.title" maxlength="30"  placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber"  autocomplete="off"></dd>
+                        <dd>
+                            <span>上传图片：</span>
+                            <div class="inline-block">
+                                <button type="button"  class="btn btn-info " id="upPhotosBtn"> 上传图片 <i></i></button>
+                                <i class=" f12 c-999 ml10">({{tagsBaseText.common}})</i>
+                                <div class="img-show-box create-dialog"></div> <input type="hidden"  ng-model="createPhotoInfo.pics[0]"  />
+                            </div>
+                        </dd>
+
+                        <dd><span>图片描述：</span><textarea class="form-control " ng-model="createPhotoInfo.explain"    rows="6" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea>
+                            <br><span></span><i>{{createPhotoInfo.explain | monitorWords}}/500</i></dd>
+                        <p class="text-center c-red f12 "><em ng-bind="createPhotoInfo.errorMsg"></em></p>
+                    </dl>
+
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-primary "  ng-click="createPhotoSumbit(createPhotoInfo)" >确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--dialog上传视频模块-->
+<div class="modal fade upVideoDialog create-dialog-box" >
+    <div class="modal-dialog " style="width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ng-if="createVideoTitleAdd">添加视频</h4>
+                <h4 class="modal-title" ng-if="!createVideoTitleAdd">编辑视频</h4>
+            </div>
+            <div class="modal-body" ng-show="maxlengtherr">
+                <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+            </div>
+
+            <div class="modal-body" ng-show="!maxlengtherr" >
+                <div class="dialog-content ml20 ">
+                    <dl class="  form-inline form-group" >
+                        <dd><span>视频名称：</span><input  class="form-control "     type="text"  ng-model="createVideoInfo.name" maxlength="30"  placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber"  autocomplete="off"></dd>
+                        <dd><span>上传视频：</span>
+                            <div class="inline-block">
+                                <button type="button"  class="btn btn-info " id="upVideoBtn"> 选择视频 <i></i></button>
+                                <em class="f12 c-999 ml10">（上传视频格式为mp4；单个视频不超过200M。）</em>
+                                <div class="mt10 video-list-content"></div><input type="hidden"  ng-model="createVideoInfo.url"  />
+                            </div>
+                        </dd>
+                        <dd>
+                            <span style="vertical-align: top">视频缩略图：</span>
+                            <div class="inline-block">
+                                <input type="hidden" ng-model="createVideoInfo.duration"/>
+                                <input type="text" class="form-control " ng-model="createVideoInfo.second" ng-maxlength="5" ng-minlength="1"  ng-pattern="pubRegex.short_number" maxlength="5" style="width: 100px" >
+                                <button type="button"  class="btn btn-info " id="getVideoPic" style='min-width: 136px' ng-disabled="!createVideoInfo.url" ng-click="createVideoShowVideoPics(createVideoInfo)">查看缩略图<i></i></button>
+                                <em class="f12 c-999">（默认获取视频第<i class="defSec"></i>秒图片，可手动设置秒数。）</em>
+                                <p class='mt10' ng-show="createVideoShowPics" ><img ng-src="{{createVideoShowPics}}"/><p>
+                            </div>
+                        </dd>
+                        <dd><span>视频描述：</span> <textarea class="form-control " ng-model="createVideoInfo.description"    rows="6" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea>
+                            <br><span></span><i>{{createVideoInfo.description | monitorWords}}/500</i></dd>
+                        <p class="text-center c-red f12 "><em ng-bind="createVideoInfo.errorMsg"></em></p>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-primary "  ng-click="createVideoSumbit(createVideoInfo)" >确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+<div ng-include="'/templates/partial/show-img.html'"></div>
+<div ng-include="'/templates/partial/show-video.html'"></div>
+

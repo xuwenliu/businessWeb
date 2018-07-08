@@ -1,0 +1,58 @@
+
+<div class="crumbs">
+  <h3>员工作品</h3>
+  <p><a ui-sref="main.employee" >员工管理</a> > <a ui-sref="main.employee" >员工列表</a> > 员工作品</p>
+</div>
+
+<div class="content-box">
+  <p class="f14 c-333 mb10 "><span class="c-333 f16">{{employeeCaseName}}</span> 所属作品列表</p>
+  <table class=" table   table-hover  table-bordered table-striped text-center ">
+    <thead >
+    <tr>
+      <td>作品名称</td>
+      <td id="updateTime" ng-click="sort('updateTime')" class="cursor">更新时间
+
+         <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['updateTime'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['updateTime'] === false}]"></i>
+        </span>
+
+      </td>
+      <td id="totalPrice" ng-click="sort('totalPrice')" class="cursor" >总造价
+         <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['totalPrice'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['totalPrice'] === false}]"></i>
+        </span>
+      </td>
+
+
+      <td id="totalChatCount" ng-click="sort('totalChatCount')" class="cursor" >相关聊天量
+         <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['totalChatCount'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['totalChatCount'] === false}]"></i>
+        </span>
+      </td>
+
+      <td id="contactCount" ng-click="sort('contactCount')"  class="cursor">相关通话次数
+         <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['contactCount'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['contactCount'] === false}]"></i>
+        </span>
+      </td>
+      <td>作品状态</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result">
+      <td ng-bind="g.caseName"></td>
+      <td ng-bind="g.updateTime"></td>
+      <td ng-bind="g.totalPrice"></td>
+      <td ng-bind="g.totalChatCount"></td>
+      <td ng-bind="g.contactCount"></td>
+      <td ng-bind="g.status"></td>
+    </tr>
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="6" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>

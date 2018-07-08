@@ -1,0 +1,42 @@
+<style>
+  .form-inline span{width: 140px}
+</style>
+
+<div class="crumbs">
+  <h3>账户设置</h3>
+  <p><a ui-sref="main.manage-setting" >账户管理</a> >账户设置</p>
+</div>
+
+<div class="content-box form-inline form-group" style="min-width: 1100px; -moz-user-select:none;" onselectstart="return false">
+    <h4>咨询设置</h4>
+    <div class="content-box-model mt10">
+        <dl>
+            <dd>
+                <span>短信设置：</span>
+                <label for="advice-msg"><input type="checkbox" id="advice-msg" ng-true-value="true" ng-false-value="false" ng-model="dataInfo.smsSwitch">有咨询时，短信通知相关业者</label>
+            </dd>
+            <dd>
+                <span>站内信设置：</span>
+                <label for="advice-mail"><input type="checkbox" id="advice-mail" ng-true-value="true" ng-false-value="false" ng-model="dataInfo.innerMsgSwitch">有咨询时，站内信通知相关业者</label>
+            </dd>
+            <dd>
+                <span></span>
+                <button class="btn btn-primary" ng-click="submit(dataInfo)">提交</button>
+            </dd>
+        </dl>
+    </div>
+
+    <!-- <h4 class="mt20">预约设置</h4>
+    <div class="manageSetting-box mt10">
+        <dl>
+            <dd>
+                <span>短信设置：</span>
+                <label for="order-msg"><input type="checkbox" id="order-msg">有咨询时，短信通知相关业者</label>
+            </dd>
+            <dd>
+                <span>站内信设置：</span>
+                <label for="order-mail"><input type="checkbox" id="order-mail">有咨询时，站内信通知相关业者</label>
+            </dd>
+        </dl>
+    </div> -->
+</div>

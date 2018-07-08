@@ -1,0 +1,132 @@
+<style>
+  .table > tbody > tr > td {vertical-align: middle;}
+  .table > tbody > tr > td p {margin-bottom: 5px;}
+  .table > tbody > tr > td p:last-child {margin-bottom: 0}
+  .cursor {cursor: pointer; }
+</style>
+
+<div class="crumbs">
+  <h3>作品列表</h3>
+  <p><a ui-sref="main.case" >作品管理</a> > 作品列表</p>
+</div>
+
+<div class="content-box">
+  <div class="form-inline form-group searchs"  >
+    <input type="search" class="form-control input-sm"  placeholder="请输入作品名称" size="30"  maxlength="30"  ng-model="list.queryKey">
+    <select  class="form-control  input-sm " ng-options="v.code as v.desc for v in decorateTypes" ng-model="list.decorateType"   >
+      <option value="">内容分类不限</option>
+    </select>
+
+    <select ng-init="caseTypeArr=[{id:1,name:'竣工作品'},{id:2,name:'设计作品'}]" class="form-control  input-sm " ng-options="v.id as v.name for v in caseTypeArr" ng-model="list.caseType"   >
+      <option value="">类型不限</option>
+    </select>
+
+
+
+    <select class="form-control input-sm " ng-options="v.code as v.desc for v in statusAll" ng-model="list.status"   >
+      <option value="">状态不限</option>
+    </select>
+
+    <button type="button" class="btn btn-primary btn-sm  input-sm" ng-click="submitSearch(list)"> <i class="iconfont f12 no-b ">&#xe644;</i>查询</button>
+    <a type="button" class="btn btn-primary btn-sm float-right " ui-sref="main.case-add-p1" > 新增作品</a>
+
+  </div>
+
+  <table class=" table table-hover table-bordered table-striped text-center c-666 ">
+    <thead>
+    <tr>
+      <td>作品名称</td>
+      <td>造价</td>
+      <td>浏览量 / 收藏</td>
+      <td>当前咨询 / 咨询总量 / 电话联系</td>
+      <td id="updateTime" ng-click="sort('updateTime')" class="cursor">更新时间
+        <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['updateTime'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['updateTime'] === false}]"></i>
+        </span>
+      </td>
+      <td>结果分类</td>
+      <td>状态</td>
+      <td>操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result" >
+
+      <td ng-bind="g.caseName" class="c-blue cursor" ng-click="show(g.caseId)" ng-if="!g.canComplete"></td>
+      <td  class="c-blue cursor" ng-if="g.canComplete"> <a  ng-href="/#/main/case-add-p1?id={{g.caseId}}&s={{g.decorateType}}" >{{g.caseName}}</a></td>
+
+      <td>{{g.totalPrice}}元 （{{g.decorateTypeDesc}}）</td>
+      <td>
+        <p>浏览：{{g.clickCount}}</p>
+        <p>收藏：{{g.collectCount}}</p>
+      </td>
+      <td>
+        <p>当前咨询：{{g.currentChatCount}}</p>
+        <p>咨询总量：{{g.totalChatCount}}</p>
+        <p>电话联系：{{g.contactCount}}</p>
+      </td>
+      <td ng-bind="g.updateTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+      <td ng-bind="g.caseTypeDesc"></td>
+      <td ng-bind="g.statusDesc"></td>
+      <td>
+
+
+        <button   ng-if="g.canDownReason "  data-target='.myModalReason'   data-toggle='modal'  class="btn btn-primary btn-xs" ng-click="getDownReason(g.caseId,1)" >下架理由</button>
+
+        <button   ng-if="g.canViewRejectReason "  data-target='.myModalReason'   data-toggle='modal'  class="btn btn-primary btn-xs" ng-click="getDownReason(g.caseId,2)" >拒绝理由</button>
+
+
+        <a ng-href="/#/main/case-add-p1?id={{g.caseId}}&s={{g.decorateType}}&e=1"  class="btn btn-primary btn-xs"  ng-show="!g.canComplete&&g.canModify">修改</a>
+        <a ng-href="/#/main/case-add-p1?id={{g.caseId}}&s={{g.decorateType}}"  ng-show="g.canComplete" class="btn btn-warning btn-xs"  >完善</a>
+        <button  ng-click="applyUp(g.caseId)" ng-show="g.canApplyUp" class="btn btn-warning btn-xs"  >申请上架</button>
+        <button  ng-show="g.canRemove"    class="btn btn-danger btn-xs" ng-click="del(g.caseId)" >删除</button>
+      </td>
+      </td>
+    </tr>
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="12" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>
+
+
+<!--dialog-->
+<div class="modal fade myModal"  >
+  <div class="modal-dialog " style="width: 460px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">作品制作申请</h4>
+      </div>
+      <div class="modal-body">
+        <div class="dialog-content lh200 ml50 ">
+          如果您要制作新作品，请联系您的专属客服 卢一慧<br>电话：<i class="c-main f16">13540498341</i>，鹦鹉美家为您服务。
+         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!--dialog下架理由-->
+<div class="modal fade myModalReason"  >
+  <div class="modal-dialog " style="width: 500px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{reasonTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="dialog-content lh200"> {{getDownReasonContent}}<br><i class="f12 c-999">如有疑问请联系您的专属bd：卢一慧,电话：</i><i class="c-main f16">13540498341</i></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

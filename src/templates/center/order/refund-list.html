@@ -1,0 +1,63 @@
+
+<div class="crumbs" >
+  <h3>退款列表</h3>
+  <p><a ui-sref="main.refund-list" >订单管理</a> > 退款列表</p>
+</div>
+
+
+<div class="content-box" >
+  <div class="form-inline form-group searchs"  >
+    <select class="form-control input-sm "   ng-options="v.code as v.desc for v in allStatusTypes.refundStatusTypes" ng-model="list.refundStatus"   >
+      <option value="">--退款状态--</option>
+    </select>
+
+
+    <div class="inline-block f12 float-right"><span>下单时间：</span>
+      <div class="input-append date form_datetime_start inline-block" >
+        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+        <input class=" form-control input-sm" size="16" placeholder="起始时间" type="text" onkeyup="this.value=''" id="beginTime" >
+      </div> ----
+      <div class="input-append date form_datetime_end inline-block" >
+        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+        <input class=" form-control input-sm" size="16" type="text"  placeholder="结束时间" onkeyup="this.value=''" id="endTime">
+      </div>
+      <input type="hidden" ng-class="{err:!dateThan==''}">
+      <i class="f12 c-red" >{{dateThan}}</i>
+      <input type="text" class="form-control input-sm"  placeholder="订单编号/手机号" maxlength="12" size="30" ng-model="list.searchKey">
+      <button   type="button" class="btn btn-primary btn-sm  input-sm " ng-click="submitSearch(list)">  <i class="iconfont f12 no-b ">&#xe644;</i>查询</button>
+    </div>
+
+  </div>
+
+  <table class=" table   table-hover  table-bordered table-striped text-center ">
+    <thead >
+    <tr>
+      <td>退款编号</td>
+      <td>订单号</td>
+      <td>业主昵称</td>
+      <td>退款阶段</td>
+      <td>退款金额</td>
+      <td>退款状态</td>
+      <td>申请时间</td>
+      <td>操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result">
+      <td ng-bind="g.refundApply.id"></td>
+      <td ng-bind="g.refundApply.orderNum "></td>
+      <td ng-bind="g.customer.nickName "></td>
+      <td>{{g.refundApply.orderPhaseDesc}}</td>
+      <td ng-bind="g.refundApply.refundAmount "></td>
+      <td>{{g.refundApply.statusDesc}}</td>
+      <td> {{g.refundApply.createTime |date:'yyyy-MM-dd HH:mm:ss'  }}</td>
+      <td>
+        <button  class="btn btn-success btn-xs "  ng-click=show(g.refundApply.id)>查看</button>
+      </td>
+    </tr>
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="9" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>
+

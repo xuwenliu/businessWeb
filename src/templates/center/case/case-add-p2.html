@@ -1,0 +1,290 @@
+
+<div class="crumbs">
+    <h3>作品编辑 </h3><em class="c-666 ml10"></em>
+    <p><a ui-sref="main.case" >作品管理</a> > <a ui-sref="main.case" >作品列表</a> > 作品编辑</p>
+</div>
+
+<div class="content-box "  >
+    <p class=" model-title mt50 block  ">作品资料</p>
+    <div class="form-inline form-group">
+        <table class="input-table-default">
+            <tr>
+                <td class="v-top"><span>作品封面图：</span></td>
+                <td>
+                    <!--<div class="upimg-inline-block ">-->
+                        <!--<ul>-->
+                            <!--<li>-->
+                                <!--<button type="button"  class="btn btn-info " id="caseCover">添加作品封面 <i></i></button>-->
+                                <!--<i class=" f12 c-999 ml10">({{tagsBaseText.face}})</i>-->
+                                <!--<div class="img-show-box"></div><input type="hidden"  ng-model="dataInfo.caseCover" />-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+
+                    <!---->
+                    <div class="upimg-inline-block ">
+                        <ul>
+                            <li >
+                                <label for="filesBase64"  id="caseCover"><div  class="btn btn-info "  > 添加作品封面</div> <input type="file" accept="image/png,image/jpeg,image/gif" id="filesBase64" style="display:none" ></label>
+                                <i class=" f12 c-999 ml10">({{tagsBaseText.face}})</i>
+                                <div class="img-show-box "></div><input type="hidden"  ng-model="dataInfo.caseCover" />
+                            </li>
+                        </ul>
+                    </div>
+                    <!---->
+
+
+                </td>
+            </tr>
+
+            <tr>
+                <td class="v-top"><span>实景照片：</span></td>
+                <td>
+                    <div class="upimg-inline-block">
+                        <ul>
+                            <li>
+                                <button type="button"  class="btn btn-info " id="scenePhotos"> 添加实景图片 <i></i> </button><i class="f12 c-999 ml10">(请上传1-40张实景照片)</i>
+                                <div class="img-show-box"></div><input type="hidden"  ng-model="employeeInfo.getScenePhotos" />
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!---->
+                    <!--<div>-->
+                        <!--<ul>-->
+                            <!--<li class="inline-block">-->
+                                <!--<button type="button" class="btn btn-info " ng-init="initCreatePhoto_sj={maxLen:40,minLen:1}"   ng-click="createPhotoDialog({lastData:getScenePhotos,addData:{},maxLen:initCreatePhoto_sj.maxLen,isScene:true})"  > 添加实景图片</button>-->
+                                <!--<i class="f12 c-999 ml10">(请上传1-40张实景照片)</i>-->
+                                <!--<input class="form-control createPhotoDialogCheck " type="hidden" ng-blur="creatPicslen=getScenePhotos.length<initCreatePhoto_sj.minLen"  ng-class="{err:creatPicslen }"/>-->
+                                <!--<i class="f12 c-red lh240  block"  ng-if="creatPicslen">至少上传一张实景图片！</i>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                        <!--<ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="getScenePhotos.length">-->
+                            <!--<li  ng-model="getScenePhotos" ng-repeat="g in getScenePhotos track by $index" class="f12 lh260" >-->
+
+                                <!--<a class="cursor" style="width:70%;" class="inline-block" data-target='.myModal' ng-click="createPhotoShow(g.url)"  data-toggle='modal' title="{{g.name}}"><img ng-src="{{g.url}}&imageView2/1/w/30/h/30" alt="缩略图" /><em class="ml10">{{g.name}}</em></a>-->
+
+                                <!--<span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createPhotoDialog({lastData:getScenePhotos,addData:g,index:$index,isScene:true})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createPhotoDel([getScenePhotos,g])">移除</a></span>-->
+
+                            <!--</li>-->
+                        <!--</ul>-->
+
+                    <!--</div>-->
+                    <!---->
+                </td>
+            </tr>
+
+            <tr>
+                <td class="v-top"><span>作品720：</span></td>
+                <td>
+
+                    <!---->
+                    <div>
+                        <ul>
+                            <li class="inline-block">
+                                <button type="button" class="btn btn-info " ng-init="initDialogDataLength={maxLen:1,minLen:0}"   ng-click="create720Dialog({lastData:get720datas,addData:{},maxLen:initDialogDataLength.maxLen,isScene:true})"  > 添加作品720</button>
+                                <i class="f12 c-999 ml10">(选填，请上传720压缩包)</i>
+                                <input class="form-control create720DialogCheck " type="hidden" ng-blur="create720DialogCheck=get720datas.length<initDialogDataLength.minLen"  ng-class="{err:create720DialogCheck }"/>
+                                <i class="f12 c-red lh240  block"  ng-if="create720DialogCheck">至少上传一组720包！</i>
+                            </li>
+                        </ul>
+                        <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="get720datas.length">
+                            <li  ng-model="get720datas" ng-repeat="g in get720datas track by $index" class="f12 lh260" >
+
+                                <a class="cursor"  ng-if="g.pathOf720" style="width:70%;" class="inline-block" data-target='.myModal720' ng-click="create720Show(view720(g.pathOf720)[0])"  data-toggle='modal'  ><img ng-src="{{view720(g.pathOf720)[1]}}"  width="30" height="30" alt="缩略图" /></a>
+
+                                <span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="create720Dialog({lastData:get720datas,addData:g,index:$index,isScene:true})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="create720Del([get720datas,g])">移除</a></span>
+
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!---->
+
+                </td>
+            </tr>
+
+            <tr>
+                <td class="v-top"><span>作品故事：</span></td>
+                <td>
+                    <textarea class="form-control" ng-model="dataInfo.caseStory"  style="width:600px"   rows="8"   ng-required="true" ng-blur="caseStory =!dataInfo.caseStory"  ng-class="{err:caseStory }" ng-maxlength="500" maxlength="500" placeholder="500字以内，例如：业主是一个金融行业的xxx，有山山水水的爱好..."></textarea>
+                    <br><i class="c-999">{{dataInfo.caseStory | monitorWords}}/500</i>
+                </td>
+            </tr>
+            <tr>
+                <td class="v-top"><span>开工典礼：</span></td>
+                <td>
+                    <div class="upimg-inline-block">
+                        <ul>
+                            <li>
+                                <button type="button"  class="btn btn-info " id="startCeremony">添加图片 <i></i></button>
+                                <i class=" f12 c-999 ml10">(选填，{{tagsBaseText.common}})</i>
+                                <div class="img-show-box create-dialog"></div><input type="hidden"  ng-model="dataInfo.SurroundingMaterialDto.startCeremony.pics[0]" />
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr id="isStartTime" style="display: none">
+
+                <td class="v-top"><span>开工时间：</span></td>
+                <td>
+                    <div class="input-append date form_datetime_start inline-block" >
+                        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+                        <input class=" form-control " size="20" placeholder="开工时间" type="text"  ng-model="beginTime"   onkeyup="this.value=''" id="beginTime"  >
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="v-top"><span>竣工典礼：</span></td>
+                <td>
+                    <div class="upimg-inline-block">
+                        <ul>
+                            <li>
+                                <button type="button"  class="btn btn-info " id="endCeremony">添加图片 <i></i></button>
+                                <i class=" f12 c-999 ml10">(选填，{{tagsBaseText.common}})</i>
+                                <div class="img-show-box create-dialog"></div><input type="hidden"  ng-model="dataInfo.SurroundingMaterialDto.endCeremony.pics[0]" />
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+
+            <tr  id="isEndTime" style="display: none">
+                <td class="v-top"><span>竣工时间：</span></td>
+                <td>
+                    <div class="input-append date form_datetime_end inline-block" >
+                        <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+                        <input class=" form-control " size="20" type="text"   placeholder="竣工时间" onkeyup="this.value=''" id="endTime" ng-model="endTime">
+                    </div>
+                </td>
+            </tr>
+            <tr> <td><span></span></td>
+                <td>
+                    <input type="hidden" ng-class="{err:!dateThan==''}">
+                    <i class="f12 c-red inline-block" >{{dateThan}}</i>
+                </td>
+            </tr>
+            <tr>
+                <td><span></span></td>
+                <td>
+                    <button ng-click="submit([dataInfo,true])"  type="button" class="btn btn-primary " >下一步</button>
+                    <div class="inline-block ml20"  ng-if="e" >
+                        <i class="f12 c-999">选择步骤：</i> <select  ng-init="jumpStep.decorateType=2"   class="form-control" ng-options="v.code as v.name disable when v.isdisabled for v in stepList" ng-model="jumpStep.decorateType"  ng-change="submit([dataInfo,true, jumpStep.decorateType])" >
+                        <option value="">--跳转到步骤--</option>
+                    </select>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!--dialog上传图文模块-->
+<div class="modal fade upPhotoDialog  create-dialog-box">
+    <div class="modal-dialog " style="width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ng-if="createPhotoTitleAdd">添加图片</h4>
+                <h4 class="modal-title" ng-if="!createPhotoTitleAdd">编辑图片</h4>
+            </div>
+            <div class="modal-body" ng-show="maxlengtherr">
+                <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+            </div>
+            <div class="modal-body"  ng-show="!maxlengtherr" >
+                <div class="dialog-content ml20 ">
+                    <dl class="  form-inline form-group" >
+                        <dd ><span>图片名称：</span><input  class="form-control "     type="text"  ng-model="createPhotoInfo.name" maxlength="30"  placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber"  autocomplete="off"></dd>
+                        <dd>
+                            <span>上传图片：</span>
+                            <div class="inline-block">
+                                <button type="button"  class="btn btn-info " id="upPhotosBtn"> 上传图片 <i></i></button>
+                                <i class=" f12 c-999 ml10">({{tagsBaseText.common}})</i>
+                                <div class="img-show-box create-dialog"></div> <input type="hidden"  ng-model="createPhotoInfo.url"  />
+                            </div>
+                        </dd>
+
+                        <dd><span>图片描述：</span><textarea class="form-control " ng-model="createPhotoInfo.description"    rows="6" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea>
+                            <br><span></span><i>{{createPhotoInfo.description | monitorWords}}/500</i></dd>
+                        <p class="text-center c-red f12 "><em ng-bind="createPhotoInfo.errorMsg"></em></p>
+                    </dl>
+
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-primary "  ng-click="createPhotoSumbit(createPhotoInfo)" >确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<!--dialog上传720模块-->
+<div class="modal fade up720Dialog  create-dialog-box">
+    <div class="modal-dialog " style="width: 600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ng-if="create720TitleAdd">添加720</h4>
+                <h4 class="modal-title" ng-if="!create720TitleAdd">编辑720</h4>
+            </div>
+            <div class="modal-body" ng-show="maxlengtherr">
+                <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+            </div>
+            <div class="modal-body"  ng-show="!maxlengtherr" >
+                <div class="dialog-content ml20 ">
+                    <dl class="  form-inline form-group" >
+                        <dd>
+                            <form action="" method="post" enctype="multipart/form-data" target="upload" class="from720 " >
+                                <input  class="krpano-hidden form-control "  disabled   ng-model="create720Info.pathOf720" ng-required="true" />
+
+                                <label  for="upfiles">
+                                   <div type="button" class="btn btn-info ">选择文件并上传<i></i></div>
+                                   <input type="file"   style="display: none" id="upfiles" name="file" >
+                               </label>
+                                <input type="hidden" name="url"  value="{{childURL}}">
+                            </form>
+                            <iframe id="krpano-iframe" name="upload" frameborder="0" style="display: none" ></iframe>
+
+                        </dd>
+
+                        <p class="text-center c-red f12 "> <i class="loading f12 c-green block"></i>{{create720Info.errorMsg}}</p>
+                    </dl>
+
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-primary "  ng-click="create720Sumbit(create720Info)" >确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!--dialog上传头像截图base64-->
+<div class="modal fade upPhotoBase64">
+    <div class="modal-dialog " style="width: 540px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="finishCropper('close')"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >图片设置</h4>
+            </div>
+            <div class="modal-body">
+                <div class="upPhotoContainer" style="width:500px;height:500px;margin: 0 auto">
+                    <img>
+                </div>
+            </div>
+            <div class="modal-footer" >
+                <button type="button" class="btn btn-primary " ng-disabled="uploadingbase64" ng-click="finishCropper()" >生成并上传{{uploadingbase64}}</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<div ng-include="'/templates/partial/show-img.html'"></div>
+<div ng-include="'/templates/partial/show-720.html'"></div>

@@ -1,0 +1,61 @@
+<style>
+  .members span:before{content: "、"}
+  .members span:nth-child(1):before{content: ""}
+
+</style>
+<div>
+  <h4>聊天信息</h4>
+  <table class=" table   table-hover table-bordered  table-striped text-center mt20 ">
+    <thead >
+    <tr>
+      <td>聊天ID</td>
+      <td>聊天名称</td>
+
+      <td id="available" ng-click="sort('available')" class="cursor">聊天状态
+        <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['available'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['available'] === false}]"></i>
+        </span>
+      </td>
+
+
+      <td id="createTime" ng-click="sort('createTime')" class="cursor" >聊天创建时间
+         <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['createTime'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['createTime'] === false}]"></i>
+        </span>
+      </td>
+
+      <td id="callTotal" ng-click="sort('callTotal')" class="cursor" >通话次数
+
+         <span class="table-sort">
+          <i ng-class="['glyphicon','glyphicon-triangle-top','f12','opacity-over',{'opacity-deep':currentSort['callTotal'] === true}]"></i>
+          <i ng-class="['glyphicon','glyphicon-triangle-bottom','f12','opacity-over',{'opacity-deep':currentSort['callTotal'] === false}]"></i>
+        </span>
+      </td>
+
+
+      <!--<td>聊天成员</td>-->
+      <!--<td>美家客服</td>-->
+      <td id="warning" ng-click="sort('warning')">聊天预警
+        <span ng-show="currentSort['warning'] === true" class="glyphicon glyphicon-triangle-top f12"></span>
+        <span ng-show="currentSort['warning'] === false" class="glyphicon glyphicon-triangle-bottom f12" ></span>
+      </td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in grid.result">
+      <td ng-bind="g.id"></td>
+      <td ng-bind="g.name"></td>
+      <td> <i ng-if="g.available">会话中</i><i ng-if="!g.available">已经关闭</i></td>
+      <td ng-bind="g.createTime |date:'yyyy-MM-dd HH:mm:ss'  "></td>
+      <td ng-bind="g.callTotal"></td>
+      <!--<td class="members"><span ng-repeat="j in g.members">{{j.showName}} </span></td>-->
+      <!--<td><span ng-repeat="k in g.members"><i ng-if="k.userJoinType==2" ng-bind="k.showName"></i></span></td>-->
+      <td><i ng-if="!g.warning">正常</i><i ng-if="g.warning">风险</i></td>
+    </tr>
+    <tr ng-if="!grid.result||grid.result.length==0"><td colspan="9" class="f12 c-999 " >没有相关数据!</td></tr>
+    </tbody>
+  </table>
+  <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>

@@ -1,0 +1,291 @@
+<style>
+.add-more{    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 50%;
+    background: #5BC0DE;
+    display: inline-block;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.del-more{
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    border: 1px solid #E53573;
+    color: #E53573;
+    background: #fff;
+    font-weight: bold;
+    line-height: 26px;
+}</style>
+<div class="crumbs">
+  <h3>{{t==1?"新增员工":"修改员工"}}</h3>
+  <p><a ui-sref="main.employee" >员工管理</a> >{{t==1?"新增员工":"修改员工"}}</p>
+</div>
+
+<div class="content-box">
+  <div class="form-inline form-group">
+    <div>
+      <dl>
+        <dd><span>姓名：</span><input type="text" class="form-control  " size="50"  maxlength="10" placeholder="请输入2-10位中文字符"  ng-model="employeeInfo.name" ng-pattern="pubRegex.realname"  ng-blur="name = !employeeInfo.name"  ng-class="{err:name }"  /></dd>
+        <dd><span>角色：</span><select class="form-control " ng-options="v.id as v.value for v in detailTypes" ng-model="employeeInfo.userDetailType" ng-disabled="isAddType" ng-required="true" ng-blur="userDetailType=!employeeInfo.userDetailType"  ng-class="{err:userDetailType }" >
+            <option value="">--选择角色--</option>
+          </select>
+        </dd>
+
+        <dd><span>手机号：</span><input type="text" class="form-control  " size="30"  maxlength="11" placeholder="请输入11位手机号" ng-disabled="isAddPhone" ng-model="employeeInfo.userPhone" ng-pattern="pubRegex.phone"  ng-blur="userPhone = !employeeInfo.userPhone"  ng-class="{err:userPhone }"  /></dd>
+        <dd><span> 个人头像：</span>
+          <!---->
+          <div class="upimg-inline-block ">
+            <ul>
+              <li >
+                <label for="filesBase64"  id="headImage"><div  class="btn btn-info "  > 上传个人头像照</div> <input type="file" accept="image/png,image/jpeg,image/gif" id="filesBase64" style="display:none" ></label>
+                <div class="img-show-box companyShow"></div><input type="hidden"  ng-model="employeeInfo.headImage" />
+              </li>
+            </ul>
+          </div>
+          <!---->
+        </dd>
+
+        <dd><span>形象展示：</span>
+          <!---->
+          <div class="upimg-inline-block ">
+            <ul>
+              <li>
+                <button type="button"  class="btn btn-info " id="lifePhotos"> 上传形象展示照 <i></i> </button> <i class="f12 c-999">(1-10张形象照片)</i>
+                <div class="img-show-box companyShow"></div><input type="hidden"  ng-model="employeeInfo.lifePhotos" />
+              </li>
+            </ul>
+          </div>
+          <!---->
+        </dd>
+
+        <dd><span style="vertical-align: top">个人简介：</span><textarea class="form-control" ng-model="employeeInfo.resume"   style="width: 500px"   rows="4" ng-required="true" ng-blur="resume=!employeeInfo.resume"  ng-class="{err:resume }" ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea> <i style=" ">{{employeeInfo.resume | monitorWords}}/500</i></dd>
+        <dd>
+          <!---->
+          <div>
+            <ul>
+              <li class="inline-block"><span >微信文章：</span></li>
+              <li class="inline-block"><button type="button" class="btn btn-info " ng-init="initCreatePhoto={maxLen:15,minLen:0}"   ng-click="createPhotoDialog({lastData:articleList,addData:{},maxLen:initCreatePhoto.maxLen})"  > 添加微信文章</button>
+                <i class="f12 c-999 ml10">(选填)</i></li>
+              <input class="form-control" type="hidden" ng-blur="creatPicslen=articleList.length<initCreatePhoto.minLen"  ng-class="{err:creatPicslen }"/>
+              <i class="f12 c-red text-center"  ng-if="creatPicslen">至少设置一篇微信文章！</i>
+            </ul>
+            <span ng-if="articleList.length"></span>
+            <ul class="create-dialog-list inline-block mt10 " style="width: 60%" ng-if="articleList.length">
+              <li  ng-model="articleList" ng-repeat="g in articleList track by $index" class="f12 lh260" >
+                <a class="cursor" style="width:70%;" class="inline-block" data-target='.myModal' ng-click="createPhotoShow(g.thumb)"  data-toggle='modal' title="{{g.title}}"><img ng-src="{{g.thumb}}&imageView2/1/w/30/h/30" alt="缩略图" /><em class="ml10">{{g.title}}</em></a>
+                <span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createPhotoDialog({lastData:articleList,addData:g,index:$index})" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createPhotoDel([articleList,g])">移除</a></span>
+              </li>
+
+            </ul>
+
+          </div>
+          <!---->
+        </dd>
+
+
+
+        <dd><span>获得奖项：</span>
+          <!---->
+          <div class="upimg-inline-block ">
+            <ul>
+              <li>
+                <button type="button"  class="btn btn-info " id="prizeBtn"> 上传图片 <i></i> </button>
+                <div class="img-show-box awardShow"></div><input type="hidden"  ng-model="employeeInfo.prizeImgs" />
+              </li>
+            </ul>
+          </div>
+          <!---->
+        </dd>
+        <dd>
+			<span>获得奖项：</span>
+            <div class="inline-block f12">
+    			<div class="input-append date form_datetime_start inline-block">
+    				<i class="add-on pa mt30"><i class="icon-th"></i></i>
+    				<input style="width:150px;" class=" form-control input-sm" size="16" placeholder="选择日期(年)" type="text" onkeyup="this.value=''" id="beginTime" ng-model="award.prizeTime">
+    			</div>
+                <input class="form-control input-sm" style="width:400px;" type="text" placeholder="相关奖项（最多30个字符）" ng-model="award.prizeInfo" maxlength="30">
+                <i ng-click="addMore(award)" class="add-more" ng-if="(employeeInfo.prizeTextDtos.length)<20">+</i>
+                <i class="f12 c-999">(最多20个)</i>
+                <em class=" f12 c-red">{{addMoreErr}}</em>
+    		</div>
+
+            <div ng-repeat="d in employeeInfo.prizeTextDtos track by $index" class="mt5">
+                <span></span>
+                <div class="inline-block f12">
+        			<div class="input-append date form_datetime_start inline-block">
+        				<i class="add-on pa mt30"><i class="icon-th"></i></i>
+        				<input style="width:150px;" class=" form-control input-sm" size="16" ng-disabled="true" placeholder="开始日期" type="text" onkeyup="this.value=''" id="beginTime" ng-model="d.prizeTime">
+        			</div>
+                    <input class="form-control input-sm" style="width:400px;" type="text" placeholder="相关奖项（最多30个字符）" ng-disabled="true" maxlength="30" ng-model="d.prizeInfo">
+                    <i class="del-more v-top" ng-click="delMore(d,$index)">-</i>
+        		</div>
+            </div>
+
+        </dd>
+
+        <dd>
+			<span>媒体报道：</span>
+            <div class="inline-block f12">
+                <input class="form-control input-sm" style="width:150px;" type="text" placeholder="题目（最多30个字符）" ng-model="m.mediaTitle" maxlength="30">
+                <input class="form-control input-sm" style="width:400px;" type="url" placeholder="相关报道链接" ng-model="m.mediaUrl">
+                <i ng-click="addMoreMedia(m)" class="add-more" ng-if="(employeeInfo.mediaInfoDtos.length)<10">+</i>
+                <i class="f12 c-999">(选填，最多10个)</i>
+                <em class=" f12 c-red">{{addMoreMediaErr}}</em>
+    		</div>
+
+            <div ng-repeat="d in employeeInfo.mediaInfoDtos track by $index" class="mt5">
+                <span></span>
+                <input class="form-control input-sm" style="width:150px;" type="text" placeholder="题目（最多30个字符）" ng-disabled="true" ng-model="d.mediaTitle" maxlength="30">
+                    <input class="form-control input-sm" style="width:400px;" type="url" placeholder="相关报道链接" ng-disabled="true" ng-model="d.mediaUrl">
+                    <i class="del-more v-top" ng-click="delMoreMedia(d,$index)">-</i>
+        		</div>
+            </div>
+
+        </dd>
+
+
+
+
+
+
+        <dd ng-init="isService=true" ng-show="isService">
+          <span>硬装设计服务标准：</span><input type="tel" class="form-control " size="10"  maxlength="4"  placeholder="整数" ng-model="employeeInfo.serviceContent.hardStart"    ng-blur="hardStart = validateFun(employeeInfo.serviceContent.hardStart) || (employeeInfo.serviceContent.hardEnd && !employeeInfo.serviceContent.hardStart)"  ng-class="{err:hardStart&&isService }" />
+          至
+          <input type="tel" class="form-control " size="10"  maxlength="4"  placeholder="整数" ng-model="employeeInfo.serviceContent.hardEnd"   ng-blur="hardEnd = validateFun(employeeInfo.serviceContent.hardEnd) || (employeeInfo.serviceContent.hardStart && !employeeInfo.serviceContent.hardEnd) "  ng-class="{err:hardEnd&&isService}" />
+          元/平方米
+          <i class="f12 c-999 ml10">(选填)</i>
+          <p  ng-if="priceCheck"><span></span><i class="f12 c-red text-center " >服务标准最大值不能低于最小值！</i></p>
+          <input class="form-control" type="hidden" ng-blur="priceCheck=((employeeInfo.serviceContent.hardStart)*1>(employeeInfo.serviceContent.hardEnd)*1)&&isService"  ng-class="{err:priceCheck }"/>
+        </dd>
+
+
+
+        <dd ng-init="isService=true" ng-show="isService">
+          <span>软装设计服务标准：</span><input type="tel" class="form-control " size="10"  maxlength="4"  placeholder="整数" ng-model="employeeInfo.serviceContent.softStart"  ng-blur="softStart = validateFun(employeeInfo.serviceContent.softStart ) || (employeeInfo.serviceContent.softEnd && !employeeInfo.serviceContent.softStart)"  ng-class="{err:softStart&&isService }" />
+          至
+          <input type="tel" class="form-control " size="10"  maxlength="4"  placeholder="整数" ng-model="employeeInfo.serviceContent.softEnd" ng-blur="softEnd = validateFun(employeeInfo.serviceContent.softEnd) || (employeeInfo.serviceContent.softStart && !employeeInfo.serviceContent.softEnd)"  ng-class="{err:softEnd&&isService}" />
+          元/平方米
+          <i class="f12 c-999 ml10">(选填)</i>
+          <p  ng-if="priceCheck2"><span></span><i class="f12 c-red text-center " >服务标准最大值不能低于最小值！</i></p>
+          <input class="form-control" type="hidden" ng-blur="priceCheck2=((employeeInfo.serviceContent.softStart)*1>(employeeInfo.serviceContent.softEnd)*1)&&isService"  ng-class="{err:priceCheck2 }"/>
+        </dd>
+
+
+        <dd ng-init="employeeInfo.canContactByPhone=true">
+          <span>电话联系：</span>
+          <input type="radio" ng-model="employeeInfo.canContactByPhone" ng-value='true'>是
+          <input type="radio" ng-model="employeeInfo.canContactByPhone" ng-value='false' >否
+        </dd>
+        <dd  class="mt30" >
+          <span></span>
+          <button onclick="window.location.href='#/main/employee'" type="button" class="form-control">取消</button>
+          <button ng-if="!isAdd"  ng-click="submit([employeeInfo,true])"   ng-disabled="ispostIng" type="button" class="btn btn-primary ">启用</button>
+          <button ng-if="isAdd"   ng-click="submit([employeeInfo,true])"   ng-disabled="ispostIng" type="button" class="btn btn-primary ">确定</button>
+        </dd>
+      </dl>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!--dialog上传图文模块-->
+<div class="modal fade upPhotoDialog  create-dialog-box">
+  <div class="modal-dialog " style="width: 700px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" ng-if="createPhotoTitleAdd">添加微信文章</h4>
+        <h4 class="modal-title" ng-if="!createPhotoTitleAdd">编辑微信文章</h4>
+      </div>
+      <div class="modal-body" ng-show="maxlengtherr">
+        <p class="text-center lh320 c-red f14 ">不能添加，最大上传数量为{{maxlength}}</p>
+      </div>
+      <div class="modal-body"  ng-show="!maxlengtherr" >
+        <div class="dialog-content ml20 ">
+          <dl class="  form-inline form-group" >
+            <dd><span>名称：</span><input  class="form-control "     type="text"  ng-model="createPhotoInfo.title" maxlength="30"  placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber"  autocomplete="off"></dd>
+            <dd><span>封面图：</span>
+              <div class="inline-block">
+                <button type="button"  class="btn btn-info " id="upPhotosBtn"> 上传图片 <i></i></button>
+                <!--<i class="f12 c-999 ml10">(上传真实清晰的公司照片，有助于提高业主认可度哟)</i>-->
+                <div class="img-show-box create-dialog"></div> <input type="hidden"  ng-model="createPhotoInfo.thumb"  />
+              </div>
+            </dd>
+            <dd><span>链接地址：</span><input  class="form-control "  type="text" ng-required="true" ng-model="createPhotoInfo.url" maxlength="200"  placeholder="完整的url地址,示例: http://"   autocomplete="off"></dd>
+
+            <p class="text-center c-red f12 "><em ng-bind="createPhotoInfo.errorMsg"></em></p>
+          </dl>
+
+        </div>
+      </div>
+      <div class="modal-footer" ng-show="!maxlengtherr">
+        <button type="button" class="btn btn-primary "  ng-click="createPhotoSumbit(createPhotoInfo)" >确定</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!--dialog上传头像截图base64-->
+<div class="modal fade upPhotoBase64">
+  <div class="modal-dialog " style="width: 540px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="finishCropper('close')"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" >图片设置</h4>
+      </div>
+      <div class="modal-body">
+        <div class="upPhotoContainer" style="width:500px;height:500px;margin: 0 auto">
+          <img>
+        </div>
+      </div>
+      <div class="modal-footer" >
+        <button type="button" class="btn btn-primary " ng-disabled="uploadingbase64" ng-click="finishCropper()" >生成并上传{{uploadingbase64}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--dialog 已经是本公司的人再次添加该人-->
+<div class="modal fade errorToast">
+	<div class="modal-dialog " style="width: 390px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<div class="dialog-content">
+					<dl class="form-inline form-group text-left">
+						<dd style="background: #eee;font-size: 12px;color: #666;padding-left: 10px;">
+							{{errorMsgToastDesc}}
+						</dd>
+					</dl>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary " ng-click="iKnow()">我知道了</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div ng-include="'/templates/partial/show-img.html'"></div>

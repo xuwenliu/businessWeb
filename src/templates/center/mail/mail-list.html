@@ -1,0 +1,47 @@
+<div class="crumbs">
+    <h3>站内信</h3>
+    <p><a ui-sref="main.mail-list" >站内信</a> > 信息列表</p>
+</div>
+
+<div class="content-box">
+    <div class="form-group">
+        <div class="inline-block f12">
+            发送时间：
+            <div class="input-append date form_datetime_start inline-block" style="vertical-align:middle;" >
+                <input class=" form-control input-sm" size="16" placeholder="查询起始时间" type="text" onkeyup="this.value=''" id="beginTime" >
+                <i class="add-on mt30"><i class="icon-th"></i></i>
+            </div>
+            ----
+            <div class="input-append date form_datetime_end inline-block" style="vertical-align:middle;" >
+                <input class=" form-control input-sm" size="16" type="text"  placeholder="查询结束时间" onkeyup="this.value=''" id="endTime">
+                <i class="add-on mt30"><i class="icon-th"></i></i>
+            </div>
+            <input type="hidden" ng-class="{err:!dateThan==''}">
+            <i class="f12 c-red" >{{dateThan}}</i>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm  input-sm" ng-click="submitSearch(list)">查询</button>
+    </div>
+    <table class=" table   table-hover  table-bordered table-striped text-center " style="table-layout:fixed">
+        <thead >
+            <tr>
+                <td width="10%">消息类型</td>
+                <td width="10%">消息标题</td>
+                <td width="65%">消息内容</td>
+                <td width="15%">发送时间</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="g in grid.result">
+              <td ng-bind="showType(g.type)"></td>
+              <td ng-bind="g.title"></td>
+              <td ng-bind="g.content" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
+              <td ng-bind="showTime(g.sendTime)" style="overflow: hidden; word-break: break-all; word-wrap: break-word;"></td>
+            </tr>
+            <tr ng-if="!grid.result||grid.result.length==0">
+                <td colspan="9" class="f12 c-999 " >没有相关数据!</td>
+            </tr>
+        </tbody>
+    </table>
+    <div ng-include="'/templates/partial/page.html'"  ></div>
+</div>
+

@@ -1,0 +1,228 @@
+
+<style>
+    .lists-box { border: 1px solid #ddd; margin-top: -1px }
+    .lists-box>p{ padding: 10px 20px;  border-bottom: 1px solid #ddd;  background: #F5F6FA }
+    .lists-box span{ line-height: 140%; }
+</style>
+
+<div class="crumbs">
+  <h3>服务流程</h3>
+  <p><a ui-sref="main.service-setting" >账户管理</a> > <a ui-sref="main.service-setting" >服务设置</a> >服务流程</p>
+</div>
+
+<div class="content-box form-inline form-group" style="min-width: 1100px;" ng-if="serviceTypeCode" >
+    <p class=" model-title mt50 block  ">{{serviceTypeTitle(serviceTypeCode)}} </p>
+    <div class="mb20">
+        <ul ng-if="!isShowInfo">
+               <li ng-if="serviceTypeCode==1||serviceTypeCode==2"><span>设计服务标准：</span>
+
+                   <input type="tel" class="form-control " size="10"  maxlength="4"  placeholder="整数" ng-model="dataInfo.priceRangeStart"  ng-pattern="pubRegex.short_number"  ng-blur="priceRangeStart=!dataInfo.priceRangeStart" ng-class="{err:priceRangeStart}" />
+                   ----
+                   <input type="tel" class="form-control " size="10"  maxlength="4"  placeholder="整数" ng-model="dataInfo.priceRangeEnd"  ng-pattern="pubRegex.short_number"  ng-blur="priceRangeEnd=!dataInfo.priceRangeEnd"   ng-class="{err:priceRangeEnd}" />
+                   元/平方米
+                   <p  ng-if="priceCheck"><span></span><i class="f12 c-red text-center " >服务标准最大值不能低于最小值！</i></p>
+                   <input class="form-control" type="hidden" ng-blur="priceCheck=(dataInfo.priceRangeStart)*1>(dataInfo.priceRangeEnd)*1"  ng-class="{err:priceCheck }"/>
+
+               </li>
+
+
+               <li class="mt20">
+                   <span class="v-top">服务流程描述：</span> <textarea class="form-control" ng-model="dataInfo.procedureDesc "  style="width:80%"   rows="6"   ng-required="true" ng-blur="procedureDesc =!dataInfo.procedureDesc"  ng-class="{err:procedureDesc }" ng-maxlength="500" maxlength="500" placeholder="500字以内，例如：业主是一个金融行业的xxx，有山山水水的爱好..."></textarea>
+                   <br><span></span><i class="c-999">{{dataInfo.procedureDesc | monitorWords}}/500</i>
+               </li>
+        </ul>
+
+
+
+        <ul ng-if="isShowInfo">
+            <li>
+               <span>设计服务标准：</span>
+               <i class="c-green">{{dataInfo.priceRangeStart}}</i>----<i class="c-green">{{dataInfo.priceRangeEnd}}</i> 元/平方米
+            </li>
+
+            <li class="mt20">
+               <span class="v-top" >服务流程描述：</span>
+               <div  class="inline-block lh200" style="width:80%" >{{dataInfo.procedureDesc}} </div>
+            </li>
+        </ul>
+
+        <ul>
+            <li class="mt20">
+               <span  class="v-top">服务流程：</span>
+                <input class="form-control createPhotoDialogCheck " type="hidden" ng-blur="itemsLen=dataInfo.items.length<1"  ng-class="{err:itemsLen }"/>
+               <div class="inline-block drag-lists-box  " style="width:80%">
+                   <i ng-if="dataInfo.items.length<1" class="f12 c-999 lh200">暂无服务流程!</i>
+                   <i class="f12 c-red lh240  block"  ng-if="itemsLen">请添加服务流程阶段！</i>
+
+                   <div class="lists-box" ng-repeat="g in dataInfo.items track by $index  "   >
+                       <em style="display: none" class="val" data-str="items">{{$index}}</em>
+                       <p class="f16 ">{{g.title}}
+                           <i class="f12 ml20 c-666" ng-if="g.costType==3">（免费）</i>
+                           <i class="f12 ml20 c-666" ng-if="g.costType==4">（另计）</i>
+                           <i class="f12 ml20 c-666" ng-if="g.costType==1">（金额：总价的{{g.costValue}} %）</i>
+                           <i class="f12 ml20 c-666" ng-if="g.costType==2">（金额：{{g.costValue}} 元）</i>
+
+                           <span class="float-right c-999 f12" ng-if="!isShowInfo">
+                                <button ng-click="createPhotoDialog({lastData:dataInfo.items,addData:g,index:$index})" type="button" class="btn btn-primary  mr20 btn-xs inline-block" > 修改 </button>
+                                <button ng-click="createPhotoDel([dataInfo.items,g])" type="button" class="btn btn-danger btn-xs  inline-block" > 删除 </button>
+
+                        </span>
+                       </p>
+                       <ul>
+                           <li  class="mt20 mb20">
+                               <span class="v-top" >服务描述：</span>
+                               <p class="inline-block" style="width: 70%">{{g.description}}</p>
+
+                           </li>
+                           <!--<li class="mt10">-->
+                               <!--<span class="v-top" >服务内容：</span>-->
+                               <!--<div class="inline-block"  style="width: 70%;" >-->
+                                   <!--<ul>-->
+                                       <!--<li class="mb10"  ng-repeat="k in g.serviceContents">-->
+                                           <!--<em >{{k.name}}</em>-->
+                                           <!--<p class=" c-999 f12">{{k.description}}</p>-->
+                                       <!--</li>-->
+
+                                   <!--</ul>-->
+                               <!--</div>-->
+                           <!--</li>-->
+                           <!--<li  class="mt10 mb20"><span class="v-top">其他需求：</span>-->
+                               <!--<div  style=" width: 70%;display: inline-block ;">{{g.otherDemands}}</div>-->
+                           <!--</li>-->
+                       </ul>
+                   </div>
+               </div>
+            </li>
+            <li class="mt20" ng-if="!isShowInfo"> <span></span>   <button ng-click="createPhotoDialog({lastData:dataInfo.items,addData:{},maxLen:20})"  class="btn btn-info mr50   w120  ">+  添加阶段 </button>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-if="!isShowInfo"  class="text-center " >
+        <button ng-click="submit([dataInfo,true])"  type="button" class="btn btn-primary w160 " >提交保存</button>
+        <button ng-click="submit([dataInfo,true,1])"  type="button" class="btn  w160 ml50" >阶段排序</button>
+    </div>
+
+    <div ng-if="dragSubmit"  class="text-center " >
+        <button  ng-click="submit([dataInfo,true,2])"  type="button" class="btn btn-primary w160 ml50" >提交排序</button>
+    </div>
+
+
+</div>
+<input name="dragSortData" type="hidden"  />
+
+
+
+
+
+<!--dialog阶段模块-->
+<div class="modal fade upPhotoDialog  create-dialog-box">
+    <div class="modal-dialog " style="width: 700px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >服务流程设置</h4>
+            </div>
+            <div class="modal-body"  >
+                <div class="dialog-content ml20 ">
+                    <dl class="  form-inline form-group" >
+
+                        <dd ><span>流程名称：</span>
+                            <input  class="form-control "     type="text"  ng-model="createPhotoInfo.title" maxlength="30" placeholder="名称30字符内，不能为纯数字" ng-pattern="pubRegex.reNumber" autocomplete="off"></dd>
+
+                        <dd ng-init="payTypes=[{code:1,desc:'百分比'},{code:2,desc:'固定金额'},{code:3,desc:'免费'},{code:4,desc:'另计'}]" ><span>金额：</span>
+                            <select class="form-control" ng-options="v.code as v.desc for v in payTypes" ng-model="createPhotoInfo.costType" ng-required="true"  style="width: 20%" >
+                                <option value="">--选择类型--</option>
+                            </select>
+                            <input  ng-if="createPhotoInfo.costType==1||createPhotoInfo.costType==2" class="form-control "  style="width: 40%"    type="text"  ng-model="createPhotoInfo.costValue" maxlength="8"  placeholder="请输入整数"  ng-pattern="pubRegex.short_number" autocomplete="off">
+                            <i class="f12 c-99"  ng-if="createPhotoInfo.costType==1">%</i>
+                            <i class="f12 c-99"  ng-if="createPhotoInfo.costType==2">元</i>
+                        </dd>
+
+                        <dd><span>服务描述：</span>
+                            <textarea class="form-control" ng-model="createPhotoInfo.description"  style="width: 462px"  rows="4" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea> <i class="c-999">{{createPhotoInfo.description| monitorWords}}/500</i>
+                        <dd>
+
+
+                            <!--&lt;!&ndash;&ndash;&gt;-->
+                            <!--<div>-->
+                                <!--<ul>-->
+                                    <!--<li class="inline-block"><span >服务内容：</span></li>-->
+                                    <!--<li class="inline-block">-->
+                                        <!--<button type="button" class="btn btn-info " ng-init="setLength={maxLen:15,minLen:1}"   ng-click="createDialogText([createPhotoInfo.serviceContents,{}])"  > 添加服务内容</button><i class="f12 c-999 ml10">(至少一个服务)</i>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                                <!--<span ng-if="createPhotoInfo.serviceContents.length"></span>-->
+                                <!--<ul class="create-dialog-list inline-block mt10 " style="width: 70%; border-radius: 5px" ng-if="createPhotoInfo.serviceContents.length">-->
+                                    <!--<li  ng-model="dataInfo.contentDtos" ng-repeat="j in createPhotoInfo.serviceContents track by $index" class="f12 lh260" >-->
+                                        <!--<span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createDialogText([createPhotoInfo.serviceContents,j,$index])" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createDialogTextDel([createPhotoInfo.serviceContents,j])">移除</a></span>-->
+                                        <!--<em >{{selectName(j.id)}}</em>-->
+                                        <!--<p class=" c-999 f12 lh160" ng-if="j.description"><em class="c-333">说明：</em>{{j.description}}</p>-->
+
+                                    <!--</li>-->
+
+                                <!--</ul>-->
+                            <!--</div>-->
+
+                            <!--&lt;!&ndash;&ndash;&gt;-->
+                        <!--</dd>-->
+                        <!--<dd>-->
+                            <!--<span class="v-top">其他需求：</span>-->
+                            <!--<textarea class="form-control" ng-model="createPhotoInfo.otherDemands"  style="width: 462px"  rows="4" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea> <i class="c-999">{{createPhotoInfo.otherDemands| monitorWords}}/500</i>-->
+
+                        <!--</dd>-->
+
+                        <p class="text-center c-red f12 "><em ng-bind="createPhotoInfo.errorMsg"></em></p>
+                    </dl>
+
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-primary "  ng-click="createPhotoSumbit(createPhotoInfo)" >确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+
+<!--选择服务内容-->
+<div class="modal fade createDialogTextDom mt50"  >
+    <div class="modal-dialog " style="width: 600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">服务内容</h4>
+            </div>
+            <div class="modal-body mb20">
+                <div style="margin-left: -40px">
+                    <ul class="model-inline form-inline lh320 mt10">
+
+
+                        <li><span>内容：</span>
+                            <select class="form-control" ng-options="v.id as v.name disable when v.isdisabled for v in serviceType" ng-model="dataInfoSer.id "  ng-change="serChange(dataInfoSer.id)">
+                                <option value="">--选择服务--</option>
+                            </select>
+                            <input type="hidden" ng-model="dataInfoSer.name">
+                            <i class="c-red">*</i>
+                        </li>
+                        <li class="mt10">
+                            <span class="v-top">说明：</span>
+                            <textarea class="form-control" ng-model="dataInfoSer.description" cols="50"  rows="4" ng-required="true"  ng-maxlength="200" maxlength="200" placeholder="200字以内"></textarea> <i class="c-999">{{dataInfoSer.description| monitorWords}}/200</i>
+                        </li>
+                        <li ng-if="errorMsg"><span></span><p class="c-red f12 inline-block">{{errorMsg}}</p></li>
+                        <li class="mt20">
+                            <span></span>
+                            <button   ng-click="submitText(dataInfoSer)"  type="button" class="btn btn-primary w100 mr10 ">提交</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

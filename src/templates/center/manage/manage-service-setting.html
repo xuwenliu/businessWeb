@@ -1,0 +1,140 @@
+<style>
+    .tag-lists li{ display: inline-block; padding: 4px 0 4px 20px; border: 1px solid #eee; background: #F5F6FA; margin:0 20px 20px 0;}
+    .tag-lists.del-tags li i{ content: '✕'; padding: 1px 10px; display: inline-block; cursor: pointer;  color: #999  }
+    .tag-lists.del-tags li i:hover{ color: #f00}
+</style>
+
+<div class="crumbs">
+  <h3>服务设置</h3>
+  <p><a ui-sref="main.service-setting" >账户管理</a> >服务设置</p>
+</div>
+
+
+<!--"hardDesignContentType": 1,-->
+<!--"hasHardDesign": false,-->
+<!--"softDesignContentType": 2,-->
+<!--"hasSoftDesign": false,-->
+<!--"hardConstructContentType": 3,-->
+<!--"hasHardConstruct": false,-->
+<!--"softConstructContentType": 4,-->
+<!--"hasSoftConstruct": false-->
+
+
+
+
+
+<div class="content-box form-inline form-group" style="min-width: 1100px; " >
+    <p class=" model-title mt50 block  ">主营业务</p>
+    <table class="input-table" style="width: 100%">
+        <tr>
+            <td style="width: 360px"> <label><input type="checkbox" ng-model="serviceSet.hasDesign" ng-value="true"  ng-change="setCompanyService(serviceSet)" >设计</label> <i class="f12 c-999 block">硬装和软装的纯设计，不包含施工，主要针对纯设计公司</i></td>
+            <td>
+                <div>
+                    <ul>
+                        <li>硬装设计标准：
+                            <a  class="btn btn-success btn-sm" ng-href="/#/main/service-setting-info?s={{serviceSet.hardDesignContentType}}&info=1"  >查看</a>
+                            <a class="btn btn-primary btn-sm ml10" ng-href="/#/main/service-setting-info?s={{serviceSet.hardDesignContentType}}" >修改</a>
+                            <i class="block f12 c-999">(对本公司提供的所有硬装设计服务的标准化，包含了服务阶段、服务内容以及收费比例等)</i>
+                        </li>
+                        <li class="mt20">软装设计标准：
+                            <a  class="btn btn-success btn-sm" ng-href="/#/main/service-setting-info?s={{serviceSet.softDesignContentType}}&info=1" >查看</a>
+                            <a class="btn btn-primary btn-sm ml10" ng-href="/#/main/service-setting-info?s={{serviceSet.softDesignContentType}}" >修改</a>
+                            <i class="block f12 c-999">(对公司提供的所有软装设计服务的标准化，包含了服务阶段、服务内容以及收费比例等)</i>
+                        </li>
+                    </ul>
+                </div>
+
+            </td>
+        </tr>
+        <tr>
+            <td><label><input type="checkbox"  ng-model="serviceSet.hasHard" ng-value="true"  ng-change="setCompanyService(serviceSet)">硬装</label> <i class="f12 c-999 block">硬装设计+硬装施工</i></td>
+            <td>
+                <i class="f12 c-999" >内容整理中...</i>
+                <!--<div>-->
+                    <!--<ul>-->
+                        <!--<li>硬装设计标准：-->
+                            <!--<a  class="btn btn-success btn-sm" ng-href="/#/main/service-setting-info?s={{serviceSet.hardDesignContentType}}&info=1" >查看</a>-->
+                            <!--<a class="btn btn-primary btn-sm ml10" ng-href="/#/main/service-setting-info?s={{serviceSet.hardDesignContentType}}">修改</a>-->
+                            <!--<i class="block f12 c-999">(对本公司提供的所有硬装设计服务的标准化，包含了服务阶段、服务内容以及收费比例等)</i>-->
+                        <!--</li>-->
+                        <!--<li class="mt20">硬装施工标准：-->
+                            <!--<a  class="btn btn-success btn-sm" ng-href="/#/main/service-setting-info?s={{serviceSet.hardConstructContentType}}&info=1" >查看</a>-->
+                            <!--<a class="btn btn-primary btn-sm ml10" ng-href="/#/main/service-setting-info?s={{serviceSet.hardConstructContentType}}" >修改</a>-->
+                            <!--<i class="block f12 c-999">(对公司提供的所有硬装施工服务的标准化，包含了服务阶段、服务内容以及收费比例等)</i>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            </td>
+        </tr>
+        <tr>
+            <td><label><input type="checkbox" ng-model="serviceSet.hasSoft" ng-value="true"  ng-change="setCompanyService(serviceSet)" > 软装</label><i class="f12 c-999 block">软装设计+软装施工</i> </td>
+            <td>
+                <i class="f12 c-999" >内容整理中...</i>
+                <!--<div>-->
+                    <!--<ul>-->
+                        <!--<li>软装设计标准：-->
+                            <!--<a  class="btn btn-success btn-sm" ng-href="/#/main/service-setting-info?s={{serviceSet.softDesignContentType}}&info=1" >查看</a>-->
+                            <!--<a class="btn btn-primary btn-sm ml10" ng-href="/#/main/service-setting-info?s={{serviceSet.softDesignContentType}}">修改</a>-->
+                            <!--<i class="block f12 c-999">(对本公司提供的所有硬装设计服务的标准化，包含了服务阶段、服务内容以及收费比例等)</i>-->
+                        <!--</li>-->
+                        <!--<li class="mt20">软装施工标准：-->
+                            <!--<a  class="btn btn-success btn-sm" ng-href="/#/main/service-setting-info?s={{serviceSet.softConstructContentType}}&info=1" >查看</a>-->
+                            <!--<a class="btn btn-primary btn-sm ml10" ng-href="/#/main/service-setting-info?s={{serviceSet.softConstructContentType}}" >修改</a>-->
+                            <!--<i class="block f12 c-999">(对公司提供的所有软装施工服务的标准化，包含了服务阶段、服务内容以及收费比例等)</i>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            </td>
+        </tr>
+    </table>
+
+    <p class=" model-title mt50 block  ">服务区域</p>
+    <div class="tag-lists mb10 del-tags">
+        <li ng-model="serviceAreas" ng-repeat="k in serviceAreas track by $index">{{k.levelTwoName}}<i></i></li>
+    </div>
+    <div><a  class="btn btn-primary btn-sm" ng-click="chooseCityDialog()" >设置服务城市</a></div>
+
+</div>
+
+
+
+<!--dialog城市模块-->
+<div class="modal fade upCityDialog ">
+    <div class="modal-dialog " style="width: 700px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">城市选择</h4>
+            </div>
+            <div class="modal-body"  >
+                <div class="dialog-content ml20 ">
+                    <ul class="  form-inline form-group" >
+                        <li>
+                            <select class="form-control inline-block" ng-options="v.id as v.name for v in provinces" ng-model="areas.buildingLevelOne "  >
+                                <option value="">--省--</option>
+                            </select>
+
+                            <select class="form-control inline-block" ng-options="v.id as v.name for v in cities" ng-model="areas.buildingLevelTwo " ng-required="true" ng-if="isAreaShow"  >
+                                <option value="">--市--</option>
+                            </select>
+                            <button type="button" class="btn btn-info  "  ng-click="addCitySumbit(serviceAreas,areas)" >添加</button>
+                        </li>
+                        <li class="mt20">
+                            <div class="tag-lists  del-tags">
+                                <ul class="f12">
+                                    <li ng-model="serviceAreas" ng-repeat="k in serviceAreas track by $index">{{k.levelTwoName}}<i ng-click="delCitys([serviceAreas,k])">✕</i></li>
+                                </ul>
+                            </div>
+                            <p class="text-center c-red f12 "><em ng-bind="errorMsg"></em></p>
+
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="!maxlengtherr">
+                <button type="button" class="btn btn-primary "  ng-click="addCitySumbitToApi(serviceAreas)" >完成</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

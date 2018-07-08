@@ -1,0 +1,161 @@
+
+<div class="crumbs">
+    <h3>作品编辑 </h3><em class="c-666 ml10"></em>
+    <p><a ui-sref="main.case" >作品管理</a> > <a ui-sref="main.case" >作品列表</a> > 作品编辑</p>
+</div>
+
+<div class="content-box "  >
+    <p class=" model-title mt50 block  ">基本资料</p>
+    <div class="form-inline form-group">
+        <table class="input-table-default">
+            <tr>
+                <td><span>结果分类：</span></td>
+                <td>
+                    <i ng-init="dataInfo.caseType=1"></i>
+                    <label><input type="radio" ng-value="1"  ng-model="dataInfo.caseType"  ng-change="dataInfo.decorateType=''">完工作品</label><i class="f12 c-999 ml10">(真实装修成果)</i>
+                    <label class="ml50"  ><input type="radio" ng-value="2"  ng-model="dataInfo.caseType"  ng-change="dataInfo.decorateType=''" >设计作品</label>
+                    <i class="f12 c-999 ml10"  >(商户针对某个具体户型出具的方案)</i>
+                </td>
+            </tr>
+
+            <tr>
+                <td><span>内容分类：</span></td>
+                <td>
+                    <select class="form-control" ng-options="v.code as v.desc for v in decorateTypes" ng-model="dataInfo.decorateType" ng-required="true" ng-blur="decorateType =!dataInfo.decorateType"  ng-class="{err:decorateType }"  >
+                        <option value="">--选择类型--</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><span>设计风格：</span></td>
+                <td>
+                    <select class="form-control" ng-options="v.code as v.desc for v in caseStyles" ng-model="dataInfo.caseStyle" ng-required="true" ng-blur="caseStyle =!dataInfo.caseStyle"  ng-class="{err:caseStyle }" >
+                        <option value="">--选择风格--</option>
+                    </select>
+                    <i class="f12 c-999 ml10">(若暂没有该作品的风格，请与bd联系，我们将尽快添加。)</i>
+                </td>
+            </tr>
+            <tr>
+                <td><span>作品名称：</span></td>
+                <td>
+                    <input type="text" class="form-control required " maxlength="30" size="60"  placeholder="作品名称2-30个字符，不能为纯数字" ng-model="dataInfo.caseName" ng-disabled="iscaseName" ng-pattern="pubRegex.reNumber"  ng-maxlength="30" ng-minlength="2"   ng-blur="ajaxcaseName([dataInfo.caseName,'caseName','作品名称已存在,请检查后再试!'])"    ng-class="{err:caseNameCss }"  /><em class="c-red f12 ml10 ">{{caseNameErrText}}</em> <input type="hidden" ng-model="caseNameOld">
+                </td>
+            </tr>
+
+            <tr >
+                <td></td>
+            </tr>
+
+            <tr >
+                <td><span>房型选择：</span></td>
+                <td>
+                    <select class="form-control" ng-options="t.code as t.desc for t in houseTypes" ng-model="dataInfo.houseType"  ng-required="true" ng-blur="houseType =!dataInfo.houseType"  ng-class="{err:houseType }"  >
+                        <option value="">--房型--</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><span>所在城市：</span></td>
+                <td>
+                    <select class="form-control" ng-options="v.id as v.name for v in provinces" ng-model="dataInfo.levelDto.buildingLevelOne " ng-required="true" ng-blur="buildingLevelOne =!dataInfo.levelDto.buildingLevelOne"  ng-class="{err:buildingLevelOne }" >
+                        <option value="">--省--</option>
+                    </select>
+
+                    <select class="form-control" ng-options="v.id as v.name for v in cities" ng-model="dataInfo.levelDto.buildingLevelTwo " ng-required="true" ng-blur="buildingLevelTwo=!dataInfo.levelDto.buildingLevelTwo"  ng-class="{err:buildingLevelTwo }"  >
+                        <option value="">--市--</option>
+                    </select>
+                    <select class="form-control areas" ng-options="v.id as v.name for v in areas" ng-model="dataInfo.levelDto.buildingLevelThree"  ng-if="isAreaShow"  ng-required="true" ng-blur="buildingLevelThree  =!dataInfo.levelDto.buildingLevelThree "  ng-class="{err:buildingLevelThree  }" >
+                        <option value="">--区/县--</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><span>楼盘名称：</span></td>
+                <td>
+                    <input type="text"  list="buildingcode"   maxlength="30" class="form-control" size="60" ng-model="dataInfo.buildingName"  ng-change="getBuildName([[dataInfo.areaLevelTwo,dataInfo.areaLevelThree,isAreaShow],dataInfo.buildingName])" ng-blur="buildingName =!dataInfo.buildingName"  ng-class="{err:buildingName }"  ng-class="{err:buildingName }"  placeholder="楼盘名称2-30个字符，不能为纯数字" ng-pattern="pubRegex.reNumber" />
+                    <datalist id="buildingcode" >
+                        <option value="{{j.buildingName}}"  ng-repeat="j in getBuild">
+                    </datalist>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td> <span>房屋面积：</span></td>
+                <td>
+                    <input type="tel" class="form-control  " size="10"  placeholder="请填写整数"  maxlength="5" ng-model="dataInfo.houseArea" ng-pattern="pubRegex.short_number"   ng-blur="houseArea = !dataInfo.houseArea"  ng-class="{err:houseArea }"  /> <i class="f12 c-999">平方米</i>
+                </td>
+            </tr>
+
+            <tr >
+                <td class="mt20"></td>
+            </tr>
+
+            <tr ng-if="decorateTypesCode!=3">
+                <td><span>硬装设计师：</span></td>
+                <td>
+                    <select class="form-control" ng-options="v.userId as v.name for v in designTeam" ng-model="dataInfo.designerHardId"  ng-disabled="olddesignerHardId"  ng-required="true" ng-blur="designerHardId =!dataInfo.designerHardId"  ng-class="{err:designerHardId }"  >
+                        <option value="">--设计师选择--</option>
+                    </select>
+                    <label ng-if="dataInfo.designerHardId"   class="f12 ml20  c-999"><input type="radio"  ng-value="dataInfo.designerHardId"   ng-model="dataInfo.contactId" > 设为联系人</label>
+                </td>
+            </tr>
+            <tr ng-if="decorateTypesCode!=2">
+                <td><span>软装设计师：</span></td>
+                <td>
+                    <select class="form-control" ng-options="v.userId as v.name for v in designTeam" ng-model="dataInfo.designerSoftId" ng-required="true" ng-disabled="olddesignerSoftId"  ng-blur="designerSoftId =!dataInfo.designerSoftId"  ng-class="{err:designerSoftId }"   >
+                        <option value="">--设计师选择--</option>
+                    </select>
+                    <label  ng-if="dataInfo.designerSoftId"  class="f12 ml20  c-999"><input type="radio" ng-value="dataInfo.designerSoftId"   ng-model="dataInfo.contactId" > 设为联系人</label>
+                </td>
+            </tr>
+
+            <tr ng-if="dataInfo.decorateType!==1">
+                <td><span>项目经理：</span></td>
+                <td>
+                    <select class="form-control" ng-options="v.userId as v.name for v in pmTeam" ng-model="dataInfo.projectManagerId"  ng-disabled="oldprojectManagerId"  ng-required="true" ng-blur="projectManagerId =!dataInfo.projectManagerId&&dataInfo.caseType==1"  ng-class="{err:projectManagerId }"   >
+                        <option value="">--项目经理选择--</option>
+                    </select>
+                    <label  ng-if="dataInfo.projectManagerId" class="f12 ml20  c-999"><input type="radio" ng-value="dataInfo.projectManagerId"   ng-model="dataInfo.contactId" > 设为联系人</label>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td><span>商务代表：</span></td>
+                <td>
+                    <select class="form-control"  ng-options="v.userId as v.name for v in advisorTeam" ng-model="dataInfo.homeAdvisorId"  ng-disabled="oldhomeAdvisorId"  ng-required="true" ng-blur="homeAdvisorId =!dataInfo.homeAdvisorId&&dataInfo.caseType==1"  ng-class="{err:homeAdvisorId }"  >
+                        <option value="">--商务代表选择--</option>
+                    </select>
+                    <label  ng-if="dataInfo.homeAdvisorId"  class="f12 ml20  c-999"><input type="radio"  ng-value="dataInfo.homeAdvisorId"  ng-model="dataInfo.contactId" > 设为联系人</label>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="hidden" class="form-control"  ng-blur="isS=!((dataInfo.homeAdvisorId==(dataInfo.contactId||9999))||(dataInfo.projectManagerId==(dataInfo.contactId||9999))||(dataInfo.designerSoftId==(dataInfo.contactId||9999))||(dataInfo.designerHardId==(dataInfo.contactId||9999)))" ng-class="{err:isS }"/>
+                    <p ng-show="isS"><i class="f12 c-red">请设置指定联系人</i></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><span></span></td>
+                <td ng-init="jumpStep={}" >
+                    <button ng-click="submit([dataInfo,true])"  type="button" class="btn btn-primary  lastSubmit " >下一步</button>
+                    <div class="inline-block ml20"  ng-if="e">
+                       <i class="f12 c-999">选择步骤：</i> <select  ng-init="jumpStep.decorateType=1"   class="form-control" ng-options="v.code as v.name disable when v.isdisabled for v in stepList" ng-model="jumpStep.decorateType"  ng-change="submit([dataInfo,true, jumpStep.decorateType])" >
+                            <option value="">--跳转到步骤--</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+
+
+
+        </table>
+
+    </div>
+</div>
+

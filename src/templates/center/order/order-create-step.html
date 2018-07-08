@@ -1,0 +1,177 @@
+<style>
+    b.num-title{ display: inline-block; width: 32px; height: 32px; line-height: 32px; text-align: center; border:2px solid #7ab5d3; box-sizing: content-box; border-radius: 100px}
+</style>
+<div class="crumbs" ng-if="!type">
+    <h3>创建合同订单</h3>
+    <p><a ui-sref="main.order-list" >订单管理</a> > <a ui-sref="main.order-list" >订单列表</a> > 创建合同订单</p>
+</div>
+
+<div ng-class="{'content-box':!type}" >
+    <p class="f12 c-999">注:"达成协议"和"竣工验收"完善后才能完成订单创建！</p>
+    <div ng-repeat="g in grids">
+        <b class="num-title">{{g.phase-1}}</b>
+        <h4 class="inline-block mt20" ng-if="g.phase==2">达成协议 <i class="f12 c-red">*</i></h4>
+        <h4 class="inline-block mt20" ng-if="g.phase==100">竣工验收 <i class="f12 c-red">*</i></h4>
+        <h4 class="inline-block mt20" ng-if="g.phase>2&&g.phase<100">阶段交付{{g.phase-2}}期 </h4>
+        <div class="inline-block mr50" >
+            <i class="c-red f12 mr50 inline-block" ng-if="g.status">（{{g.status}}）</i>
+            <button ng-click="orderSubmitCheck([orderId,g.phase])" type="button" class="btn btn-primary mr20 ml50 btn-sm" ng-show="g.canSubmitCheck"> 提交验收 </button>
+            <button ng-click="createDialogEdit(g)" type="button" class="btn btn-primary  mr20 btn-sm" ng-show="g.canModify"> 编辑 </button>
+            <button ng-click="delPhase([orderId,g.phase])" type="button" class="btn btn-danger  mr20 btn-sm" ng-show="g.canRemove"> 删除 </button>
+            <a ng-href="#/main/refund-list-info?id={{g.refundApplyId}}"  type="button" class="btn btn-success  mr20 btn-sm" ng-show="g.canViewRefund"> 查看退款 </a>
+        </div>
+
+        <button ng-click="createDialogEdit(g)" type="button" class="btn btn-primary  mr20 btn-sm" ng-if="!g.phaseId" > 完善该阶段 </button>
+
+        <div class="content-box-model mt10" ng-if="g.startTime" >
+            <ul class="model-inline lh200">
+                <li><span>总金额：</span> <i class="c-red f18" >￥ {{g.amount}}</i></li>
+                <li ng-if="type"><span>还需支付：</span><i class="c-red f18" >￥ {{g.dueToPayAmount }}</i></li>
+                <br>
+                <li><span>开始时间：</span>  {{g.startTime | date:'yyyy-MM-dd'}}</li>
+                <li><span>结束时间：</span>  {{g.finishTime | date:'yyyy-MM-dd'}}</li>
+                <br>
+                <li style="width: 90%;">
+                    <span class="v-top">服务内容：</span>
+                    <div class="inline-block mt5 "  style="width: 90%;" >
+                        <dl>
+                            <dd class="mb10" ng-repeat=" k in g.contentDtos">
+                                <em >{{k.name}}</em>
+                                <p class=" c-999 f12">{{k.description}}</p>
+                            </dd>
+                        </dl>
+                    </div>
+                </li>
+                <br>
+                <li style="width: 90%;"><span class="v-top">其他需求：</span>
+                    <div  class="lh160 mt5 " style=" width: 90%;display: inline-block ;">{{g.postscript}}</div>
+                </li>
+
+            </ul>
+        </div>
+        <div class="mt20" ng-if="g.phase==getPhaseLast">
+            <button ng-click="createDialogEdit({phase:getPhaseLast+1})" type="button" class="btn btn-primary mr50   w160  ">+  添加阶段 </button>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+<!--dialog-->
+<div class="modal fade createOrderDialog"  >
+    <div class="modal-dialog " style="width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">订单阶段设置</h4>
+            </div>
+            <div class="modal-body mb20">
+                <div class="">
+                    <ul class="model-inline form-inline lh320 mt10">
+                        <li><span>总金额：</span>
+                            <input type="text" class="form-control " size="20" ng-minlength="0" ng-pattern="pubRegex.short_number" maxlength="8" placeholder="请输入整数金额" ng-model="dataInfo.amount "  ng-blur="amount = !dataInfo.amount"  ng-class="{err:amount}" />
+                            <i class="c-red">*</i>
+                        </li>
+
+                        <li>
+                            <span>起止时间：</span>
+                            <div class="input-append date form_datetime_start inline-block" >
+                                <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+                                <input class=" form-control " size="16" placeholder="开始时间" type="text" ng-model="dataInfo.startTime"   onkeyup="this.value=''" id="beginTime" >
+                                <i class="c-red">*</i>
+                            </div> ----
+                            <div class="input-append date form_datetime_end inline-block" >
+                                <i class="add-on pa mt30" ><i class="icon-th"></i></i>
+                                <input class=" form-control " size="16" type="text" ng-model="dataInfo.finishTime"  placeholder="结束时间" onkeyup="this.value=''" id="endTime">
+                                <i class="c-red">*</i>
+                            </div>
+                            <input type="hidden" ng-class="{err:!dateThan==''}">
+                            <i class="f12 c-red" >{{dateThan}}</i>
+                        </li>
+                        <li>
+                            <!---->
+                            <div>
+                                <ul>
+                                    <li class="inline-block"><span >服务内容：</span></li>
+                                    <li class="inline-block">
+                                        <button type="button" class="btn btn-info " ng-init="setLength={maxLen:15,minLen:1}"   ng-click="createDialogText([dataInfo.contentDtos,{}])"  > 添加服务内容</button><i class="f12 c-999 ml10">(至少一个服务)</i>
+                                        <input class="form-control" type="hidden" ng-blur=" serviceLen=dataInfo.contentDtos.length<setLength.minLen"  ng-class="{err:serviceLen }"/>
+                                        <i class="f12 c-red text-center" ng-if="serviceLen" >至少选择一项服务！</i>
+
+
+                                    </li>
+                                </ul>
+                                <span ng-if="dataInfo.contentDtos.length"></span>
+                                <ul class="create-dialog-list inline-block mt10 " style="width: 70%; border-radius: 5px" ng-if="dataInfo.contentDtos.length">
+                                    <li  ng-model="dataInfo.contentDtos" ng-repeat="g in dataInfo.contentDtos track by $index" class="f12 lh260" >
+                                        <span class="float-right c-999" style="width: 100px"><i class="iconfont f12">&#xe616;</i><a href="javascript:void(0)"  ng-click="createDialogText([dataInfo.contentDtos,g,$index])" >编辑</a> <i class="iconfont f12">&#xe615;</i><a href="javascript:void(0)" ng-click="createDialogTextDel([dataInfo.contentDtos,g])">移除</a></span>
+                                        <em >{{selectName(g.id)}}</em>
+                                        <p class=" c-999 f12 lh160" ng-if="g.description"><em class="c-333">说明：</em>{{g.description}}</p>
+
+
+
+                                    </li>
+
+                                </ul>
+                            </div>
+
+                            <!---->
+                        </li>
+
+                        <li class="mt10">
+                            <span class="v-top">其他需求：</span>
+                            <textarea class="form-control" ng-model="dataInfo.postscript"  style="width: 538px"  rows="4" ng-required="true"  ng-maxlength="500" maxlength="500" placeholder="500字以内"></textarea> <i class="c-999">{{dataInfo.postscript| monitorWords}}/500</i>
+                        </li>
+                        <li class="mt20">
+                            <span></span>
+                            <button   ng-click="submit([dataInfo,true])"  type="button" class="btn btn-primary w100 mr10 ">提交</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<!--选择服务内容-->
+<div class="modal fade createDialogTextDom mt50"  >
+    <div class="modal-dialog " style="width: 600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">服务内容</h4>
+            </div>
+            <div class="modal-body mb20">
+                <div style="margin-left: -40px">
+                    <ul class="model-inline form-inline lh320 mt10">
+
+
+                        <li><span>内容：</span>
+                            <select class="form-control" ng-options="v.id as v.name disable when v.isdisabled for v in serviceType" ng-model="dataInfoSer.id "  ng-change="serChange(dataInfoSer.id)">
+                                <option value="">--选择服务--</option>
+                            </select>
+                            <input type="hidden" ng-model="dataInfoSer.name">
+                            <i class="c-red">*</i>
+                        </li>
+                        <li class="mt10">
+                            <span class="v-top">说明：</span>
+                            <textarea class="form-control" ng-model="dataInfoSer.description" cols="50"  rows="4" ng-required="true"  ng-maxlength="200" maxlength="200" placeholder="200字以内"></textarea> <i class="c-999">{{dataInfoSer.description| monitorWords}}/200</i>
+                        </li>
+                        <li ng-if="errorMsg"><span></span><p class="c-red f12 inline-block">{{errorMsg}}</p></li>
+                        <li class="mt20">
+                            <span></span>
+                            <button   ng-click="submitText(dataInfoSer)"  type="button" class="btn btn-primary w100 mr10 ">提交</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

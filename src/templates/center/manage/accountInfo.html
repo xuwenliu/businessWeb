@@ -1,0 +1,137 @@
+<style>
+    .content-box-model dd span{ width: 120px}
+</style>
+
+<div class="crumbs">
+  <h3>资金总览</h3>
+  <p><a ui-sref="main.accountInfo" >账户管理</a> >资金总览</p>
+</div>
+
+<div class="content-box form-inline form-group" style="min-width: 1100px; -moz-user-select:none;" onselectstart="return false">
+    <h4>资金信息</h4>
+    <div class="content-box-model mt10">
+        <dl ng-show="hasAccount">
+            <dd>
+            <span class="mr20">可用余额：</span>¥ {{accountBrief.balance}}
+            </dd>
+            <!-- <dd ng-show="accountBrief.frozenCapital">
+                <span class="mr20">冻结余额：</span>¥ {{accountBrief.frozenCapital}} <button class="btn btn-success btn-sm ml20">详情</button>
+            </dd> -->
+            <dd>
+                <span class="mr20">银行卡：</span>{{accountBrief.bankCardInfo.bankName}} <a ui-sref="main.account-manage" class="btn btn-success btn-sm ml20">详情</a>
+            </dd>
+            <dd>
+                <span class="mr20">卡号：</span>{{accountBrief.bankCardInfo.cardNumber}}
+            </dd>
+        </dl>
+        <dl ng-show="!hasAccount">
+            <dd>
+                <span>暂无账户：</span> <a ui-sref="main.account-manage" class="btn btn-primary btn-sm">新增</a>
+            </dd>
+        </dl>
+    </div>
+
+    <h4 class="mt40" ng-show="hasAccount">收支明细 <i class="c-999 ml20 f12">注：如果没有选择时间范围，默认查询1个月以内的记录</i></h4>
+    <div class=" mt20 content-box-model " ng-show="hasAccount" >
+        <div class="inline-block f12">
+            下单时间：
+            <div class="input-append date form_datetime_start inline-block" >
+                <i class="add-on pa mt30"><i class="icon-th"></i></i>
+                <input class=" form-control input-sm" size="16" placeholder="起始时间" type="text" onkeyup="this.value=''" id="beginTime" >
+            </div>
+            ----
+            <div class="input-append date form_datetime_end inline-block" >
+                <i class="add-on pa mt30"><i class="icon-th"></i></i>
+                <input class=" form-control input-sm" size="16" type="text"  placeholder="结束时间" onkeyup="this.value=''" id="endTime">
+            </div>
+            <input type="hidden" ng-class="{err:!dateThan==''}">
+            <i class="f12 c-red" >{{dateThan}}</i>
+            <select class="form-control input-sm ml20" ng-init="orderTypeContent=[{id:-1,value:'全部'},{id:1,value:'收入'},{id:2,value:'支出'}]" ng-options="v.id as v.value for v in orderTypeContent" ng-model="list.type"   >
+                <option value="">--收支类型--</option>
+            </select>
+            <button type="button" class="btn btn-primary btn-sm  input-sm" ng-click="submitSearch(list)">查询</button>
+        </div>
+        <span class="inline-block float-right ml20" style="width:auto;"><i class="b">收入：</i>{{statistics.income}}</span>
+        <span class="inline-block float-right ml20" style="width:auto;"><i class="b">支出：</i>{{statistics.expenditure}}</span>
+        <table class=" table table-hover  table-striped text-center mt20">
+            <thead >
+                <tr>
+                    <td>交易单号</td>
+                    <td>金额（RMB）</td>
+                    <td>交易类型</td>
+                    <!-- <td>收支渠道</td> -->
+                    <td>订单号</td>
+                    <td>交易状态</td>
+                    <td>交易时间</td>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr ng-repeat="g in grid.result">
+                    <td>
+                        <span ng-bind="g.serialNumber"></span>
+                    </td>
+                    <td>
+                        <span ng-bind="g.amount"></span>
+                    </td>
+                    <!--<td ng-switch="g.journalType">-->
+                        <!--<span ng-switch-when="1">支付</span>-->
+                        <!--<span ng-switch-when="2">退款</span>-->
+                        <!--<span ng-switch-when="3">转账</span>-->
+                        <!--<span ng-switch-when="4">分账</span>-->
+                        <!--<span ng-switch-when="5">线下补款</span>-->
+                    <!--</td>-->
+                    <!--<td ng-switch="g.payTool">-->
+                        <!--<span ng-switch-when="1">余额支付</span>-->
+                        <!--<span ng-switch-when="2">绑卡支付</span>-->
+                        <!--<span ng-switch-when="3">绑新卡支付</span>-->
+                        <!--<span ng-switch-when="4">微信支付</span>-->
+                        <!--<span ng-switch-when="5">易宝支付</span>-->
+                    <!--</td>-->
+                    <td>{{g.journalTypeDesc}}<i class='c-999'>（{{g.incomeDesc}}）</i></td>
+                    <!-- <td>{{g.payToolDesc}}</td> -->
+                    <td>
+                        <span ng-bind="g.orderNum"></span>
+                    </td>
+                    <!--<td ng-switch="g.status">-->
+                        <!--<span ng-switch-when="1">成功</span>-->
+                        <!--<span ng-switch-when="2">失败</span>-->
+                    <!--</td>-->
+                    <td>{{g.statusDesc}}</td>
+                    <td>
+                        <span ng-bind="g.createTime | date:'yyyy-MM-dd HH:mm:ss'"></span>
+                    </td>
+                </tr>
+                <tr ng-if="!grid.result||grid.result.length==0">
+                    <td colspan="9" class="f12 c-999 " >没有相关数据!</td>
+                </tr>
+            </tbody>
+        </table>
+        <div ng-include="'/templates/partial/page.html'"  ></div>
+    </div>
+</div>
+
+
+<!--dialog-->
+<div class="modal fade myModal" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>{{dialog.title}}</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-content lh200 form-inline form-group">
+                    <p class="sec-em f16">您确定需要将余额全部提现吗？</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger"  ng-model="dialog.submitID" ng-show="dialog.ensure" ng-click="dialogSubmit()">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{dialog.close}}</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
